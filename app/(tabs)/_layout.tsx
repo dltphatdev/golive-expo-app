@@ -1,9 +1,7 @@
-import { IconSymbol } from "@/components/ui/IconSymbol";
 import { FontAwesome } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import React from "react";
-import { TouchableWithoutFeedback, View } from "react-native";
-import RankIcon from "../../assets/images/shopping-bag.svg";
+import { StyleSheet, TouchableWithoutFeedback, View } from "react-native";
 
 export default function TabLayout() {
 	return (
@@ -14,12 +12,12 @@ export default function TabLayout() {
 				tabBarActiveTintColor: "rgba(255, 112, 72, 1)",
 				tabBarStyle: {
 					position: "absolute",
-					bottom: 32,
+					bottom: 50,
 					left: 20,
 					right: 20,
 					height: 70,
 					borderRadius: 20,
-					backgroundColor: "#1B3D85",
+					backgroundColor: "#2F3C50",
 					marginInline: 35,
 				},
 				tabBarItemStyle: {
@@ -35,8 +33,7 @@ export default function TabLayout() {
 				tabBarBackground: () => (
 					<View
 						style={{
-							// backgroundColor: "rgba(47, 60, 80, 1)",
-							borderRadius: 20,
+							borderRadius: 16,
 						}}
 					/>
 				),
@@ -47,11 +44,13 @@ export default function TabLayout() {
 				options={{
 					title: "Home",
 					tabBarIcon: ({ focused }) => (
-						<FontAwesome
-							name="home"
-							size={28}
-							color={focused ? "rgba(255, 112, 72, 1)" : "#ccc"}
-						/>
+						<View style={styles.containerItemIcon}>
+							<FontAwesome
+								name="home"
+								size={32}
+								color={focused ? "rgba(255, 112, 72, 1)" : "#ccc"}
+							/>
+						</View>
 					),
 				}}
 			/>
@@ -59,21 +58,13 @@ export default function TabLayout() {
 				name="explore"
 				options={{
 					title: "Explore",
-					tabBarIcon: ({ color }) => (
-						<View
-							style={{
-								alignItems: "center",
-								justifyContent: "center",
-								height: "100%",
-								marginTop: 35,
-							}}
-						>
-							{/* <Ionicons
-								name="chatbubble"
-								size={24}
-								color="rgba(255,255,255,0.6)"
-							/> */}
-							<RankIcon width={24} height={24} fill="#fff" />
+					tabBarIcon: ({ focused }) => (
+						<View style={styles.containerItemIcon}>
+							<FontAwesome
+								name="trophy"
+								size={32}
+								color={focused ? "rgba(255, 112, 72, 1)" : "#ccc"}
+							/>
 						</View>
 					),
 				}}
@@ -82,8 +73,14 @@ export default function TabLayout() {
 				name="setting"
 				options={{
 					title: "Setting",
-					tabBarIcon: ({ color }) => (
-						<IconSymbol size={28} name="paperplane.fill" color={color} />
+					tabBarIcon: ({ focused }) => (
+						<View style={styles.containerItemIcon}>
+							<FontAwesome
+								name="shopping-bag"
+								size={26}
+								color={focused ? "rgba(255, 112, 72, 1)" : "#ccc"}
+							/>
+						</View>
 					),
 				}}
 			/>
@@ -91,11 +88,33 @@ export default function TabLayout() {
 				name="rank"
 				options={{
 					title: "Rank",
-					tabBarIcon: ({ color }) => (
-						<IconSymbol size={28} name="paperplane.fill" color={color} />
+					tabBarIcon: ({ focused }) => (
+						<View
+							style={{
+								alignItems: "center",
+								justifyContent: "center",
+								height: "100%",
+								marginTop: 32,
+							}}
+						>
+							<FontAwesome
+								name="newspaper-o"
+								size={28}
+								color={focused ? "rgba(255, 112, 72, 1)" : "#ccc"}
+							/>
+						</View>
 					),
 				}}
 			/>
 		</Tabs>
 	);
 }
+
+const styles = StyleSheet.create({
+	containerItemIcon: {
+		alignItems: "center",
+		justifyContent: "center",
+		height: "100%",
+		marginTop: 28,
+	},
+});

@@ -1,59 +1,95 @@
+import { CircleProgress } from "@/components/CircleProgress";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+	Dimensions,
+	Image,
+	SafeAreaView,
+	ScrollView,
+	StyleSheet,
+	Text,
+	View,
+} from "react-native";
+import StarSvg from "../../assets/images/star.svg";
 
+const { width } = Dimensions.get("window");
 export default function HomeScreen() {
+	const steps = 2045;
+	const goal = 5000;
+	const percentage = Math.min(steps / goal, 1);
+	const angle = percentage * 360;
+
 	return (
 		<SafeAreaView style={styles.container}>
-			<LinearGradient colors={["#4A90E2", "#7BB3F0"]} style={styles.gradient}>
+			<LinearGradient colors={["#286BAF", "#77A5D4"]} style={styles.gradient}>
 				<ScrollView style={styles.content}>
 					{/* Header */}
 					<View style={styles.header}>
-						<Ionicons name="menu" size={24} color="white" />
 						<View style={styles.profile}>
 							<View style={styles.avatar}>
 								<Text style={styles.avatarText}>P</Text>
 							</View>
 							<View>
 								<Text style={styles.greeting}>Chào buổi sáng!</Text>
-								<Text style={styles.name}>Phi</Text>
+								<View style={styles.actionHeaderInfo}>
+									<Text style={styles.name}>Phi</Text>
+									<Text style={styles.rectangle}>/</Text>
+									<Text style={styles.textLogout}>Đăng xuất</Text>
+								</View>
 							</View>
 						</View>
 						<Ionicons name="chatbubble-outline" size={24} color="white" />
 					</View>
-
 					{/* Progress */}
 					<View style={styles.progressSection}>
-						<View style={styles.progressHeader}>
-							<Text style={styles.progressText}>14,000 / 15,000 Bu/cc</Text>
-							<View style={styles.levelBadge}>
-								<Ionicons name="star" size={16} color="#FFD700" />
-								<Text style={styles.levelText}>Level 5</Text>
+						<View style={{ width: width - 100 }}>
+							<View style={styles.progressHeader}>
+								<View style={styles.boxProgressText}>
+									<Text style={styles.progressText1}>14,000</Text>
+									<Text style={styles.progressText2}>/</Text>
+									<Text style={styles.progressText3}>15,000</Text>
+									<Text style={styles.progressText4}>Bước</Text>
+								</View>
+								<View>
+									<Text style={styles.levelText}>Level 5</Text>
+								</View>
+							</View>
+							<View style={styles.progressBar}>
+								<LinearGradient
+									colors={["#FA724B", "#FFDCD2"]}
+									style={[styles.progressFill, { width: "60%" }]}
+									start={{ x: 0, y: 0 }}
+									end={{ x: 1, y: 1 }}
+								></LinearGradient>
 							</View>
 						</View>
-						<View style={styles.progressBar}>
-							<View style={styles.progressFill} />
+						<View>
+							<StarSvg width={48} height={48} />
 						</View>
 					</View>
-
 					{/* Activity Card */}
 					<View style={styles.card}>
 						<View style={styles.activityRow}>
 							<View style={styles.activityInfo}>
-								<View style={styles.activityIcon}>
-									<Ionicons name="walk" size={20} color="#4A90E2" />
+								<View style={styles.whiteCircle}>
+									<Image
+										source={require("../../assets/images/runner.png")}
+										width={48}
+										height={48}
+									/>
+									{/* Hình tròn xanh */}
+									<View style={styles.greenDot} />
+									<View style={styles.blueRing} />
 								</View>
-								<View>
+								<View style={{ gap: 4 }}>
 									<Text style={styles.date}>26 tháng 03</Text>
+									<Text style={styles.day}>Hôm nay</Text>
 									<Text style={styles.time}>01:09:44</Text>
 								</View>
 							</View>
-							<View style={styles.circle}>
-								<Text style={styles.circleText}>2345</Text>
-							</View>
+							<CircleProgress steps={steps} goal={goal} />
 						</View>
 					</View>
-
 					{/* Stats */}
 					<View style={styles.statsRow}>
 						<View style={styles.statCard}>
@@ -62,7 +98,7 @@ export default function HomeScreen() {
 						</View>
 						<View style={styles.statCard}>
 							<Text style={styles.statNumber}>1000</Text>
-							<Text style={styles.statLabel}>Point</Text>
+							<Text style={styles.statLabel}>S Point</Text>
 						</View>
 					</View>
 
@@ -72,7 +108,8 @@ export default function HomeScreen() {
 							<Text style={styles.historyTitle}>Lịch sử</Text>
 							<Text style={styles.viewAll}>Tất cả</Text>
 						</View>
-						{[1, 2, 3].map((_, i) => (
+
+						{[1, 2, 3, 4, 5, 6, 7, 8].map((_, i) => (
 							<View key={i} style={styles.historyItem}>
 								<View>
 									<Text style={styles.historyDate}>27 tháng 05 năm 2025</Text>
@@ -80,20 +117,12 @@ export default function HomeScreen() {
 								</View>
 								<View>
 									<Text style={styles.historyValue}>11,120</Text>
-									<Text style={styles.historyUnit}>Bu/cc</Text>
+									<Text style={styles.historyUnit}>Bước</Text>
 								</View>
 							</View>
 						))}
 					</View>
 				</ScrollView>
-
-				{/* Bottom Nav */}
-				{/* <View style={styles.bottomNav}>
-					<Ionicons name="home" size={24} color="#FF6B6B" />
-					<Ionicons name="trophy" size={24} color="rgba(255,255,255,0.6)" />
-					<Ionicons name="person" size={24} color="rgba(255,255,255,0.6)" />
-					<Ionicons name="chatbubble" size={24} color="rgba(255,255,255,0.6)" />
-				</View> */}
 			</LinearGradient>
 		</SafeAreaView>
 	);
@@ -109,52 +138,74 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		paddingVertical: 20,
 	},
+	actionHeaderInfo: {
+		flexDirection: "row",
+		gap: 5,
+	},
+	rectangle: {
+		color: "#fff",
+		marginTop: 2,
+	},
 	profile: { flexDirection: "row", alignItems: "center", gap: 10 },
 	avatar: {
-		width: 40,
-		height: 40,
-		borderRadius: 20,
+		width: 48,
+		height: 48,
+		borderRadius: 100,
 		backgroundColor: "#FF6B6B",
 		alignItems: "center",
 		justifyContent: "center",
 	},
 	avatarText: { color: "white", fontSize: 18, fontWeight: "bold" },
 	greeting: { color: "white", fontSize: 14 },
+	textLogout: { color: "white", fontSize: 14, marginTop: 2 },
 	name: { color: "white", fontSize: 16, fontWeight: "bold" },
-	progressSection: { marginBottom: 20 },
+	progressSection: {
+		marginBottom: 20,
+		flexDirection: "row",
+		justifyContent: "space-between",
+		gap: 10,
+	},
 	progressHeader: {
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
 		marginBottom: 10,
 	},
-	progressText: { color: "white", fontSize: 16, fontWeight: "600" },
-	levelBadge: {
+	boxProgressText: {
 		flexDirection: "row",
-		alignItems: "center",
-		backgroundColor: "rgba(255,255,255,0.2)",
-		paddingHorizontal: 12,
-		paddingVertical: 6,
-		borderRadius: 15,
 		gap: 4,
 	},
-	levelText: { color: "white", fontSize: 12, fontWeight: "600" },
+	progressText1: {
+		color: "white",
+		fontSize: 13,
+		fontWeight: "400",
+		marginTop: 4,
+	},
+	progressText2: { color: "white", fontSize: 15, fontWeight: "500" },
+	progressText3: { color: "white", fontSize: 18, fontWeight: "700" },
+	progressText4: {
+		color: "white",
+		fontSize: 14,
+		fontWeight: "400",
+		marginTop: 3,
+	},
+	levelText: { color: "#FFC932", fontSize: 22, fontWeight: "600" },
 	progressBar: {
-		height: 8,
+		height: 10,
 		backgroundColor: "rgba(255,255,255,0.3)",
-		borderRadius: 4,
+		borderRadius: 5,
 	},
 	progressFill: {
 		height: "100%",
-		width: "93%",
-		backgroundColor: "#FF6B6B",
 		borderRadius: 4,
 	},
 	card: {
-		backgroundColor: "rgba(255,255,255,0.9)",
-		borderRadius: 16,
+		borderRadius: 20,
 		padding: 20,
 		marginBottom: 20,
+		backgroundColor: "rgba(255, 255, 255, 0.10)",
+		borderWidth: 1,
+		borderColor: "rgba(255, 255, 255, 0.17)",
 	},
 	activityRow: {
 		flexDirection: "row",
@@ -162,42 +213,27 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	activityInfo: { flexDirection: "row", alignItems: "center", gap: 12 },
-	activityIcon: {
-		width: 40,
-		height: 40,
-		borderRadius: 20,
-		backgroundColor: "#E8F4FD",
-		alignItems: "center",
-		justifyContent: "center",
-	},
-	date: { fontSize: 16, fontWeight: "600", color: "#333" },
-	time: { fontSize: 14, color: "#666" },
-	circle: {
-		width: 60,
-		height: 60,
-		borderRadius: 30,
-		borderWidth: 4,
-		borderColor: "#4A90E2",
-		alignItems: "center",
-		justifyContent: "center",
-		backgroundColor: "white",
-	},
-	circleText: { fontSize: 14, fontWeight: "bold", color: "#4A90E2" },
+	date: { fontSize: 15, fontWeight: "500", color: "#fff" },
+	day: { color: "#43C465", fontSize: 18, fontWeight: 500 },
+	time: { fontSize: 14, color: "#fff" },
 	statsRow: { flexDirection: "row", gap: 15, marginBottom: 30 },
 	statCard: {
 		flex: 1,
-		backgroundColor: "rgba(255,255,255,0.9)",
-		borderRadius: 16,
-		padding: 20,
+		backgroundColor: "rgba(255, 255, 255, 0.10)",
+		borderWidth: 1,
+		borderColor: "rgba(255, 255, 255, 0.17)",
+		borderRadius: 20,
+		height: 125,
+		justifyContent: "center",
 		alignItems: "center",
 	},
 	statNumber: {
-		fontSize: 24,
+		fontSize: 30,
 		fontWeight: "bold",
-		color: "#333",
+		color: "#fff",
 		marginBottom: 5,
 	},
-	statLabel: { fontSize: 14, color: "#666" },
+	statLabel: { fontSize: 14, color: "#fff" },
 	historySection: { marginBottom: 100 },
 	historyHeader: {
 		flexDirection: "row",
@@ -208,34 +244,56 @@ const styles = StyleSheet.create({
 	historyTitle: { fontSize: 18, fontWeight: "bold", color: "white" },
 	viewAll: { fontSize: 14, color: "rgba(255,255,255,0.8)" },
 	historyItem: {
-		backgroundColor: "rgba(255,255,255,0.9)",
+		backgroundColor: "rgba(47,60,80,0.4)",
 		borderRadius: 12,
-		padding: 16,
+		paddingHorizontal: 20,
+		paddingVertical: 20,
 		marginBottom: 10,
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
 	},
 	historyDate: {
-		fontSize: 14,
-		fontWeight: "600",
-		color: "#333",
+		fontSize: 18,
+		fontWeight: "500",
+		color: "#fff",
 		marginBottom: 4,
 	},
-	historyDetail: { fontSize: 12, color: "#666" },
+	historyDetail: { fontSize: 14, color: "#fff" },
 	historyValue: {
-		fontSize: 16,
+		fontSize: 20,
 		fontWeight: "bold",
-		color: "#333",
+		color: "#fff",
 		textAlign: "right",
 	},
-	historyUnit: { fontSize: 12, color: "#666", textAlign: "right" },
-	bottomNav: {
-		backgroundColor: "rgba(0,0,0,0.3)",
-		flexDirection: "row",
-		paddingVertical: 15,
-		justifyContent: "space-around",
-		borderTopLeftRadius: 20,
-		borderTopRightRadius: 20,
+	historyUnit: { fontSize: 12, color: "#fff", textAlign: "right" },
+	whiteCircle: {
+		width: 48,
+		height: 48,
+		borderRadius: 100,
+		backgroundColor: "#fff",
+		alignItems: "center",
+		justifyContent: "center",
+		position: "relative",
+	},
+	greenDot: {
+		width: 16,
+		height: 16,
+		backgroundColor: "#4CAF50",
+		borderRadius: 16,
+		position: "absolute",
+		bottom: -5,
+		right: 4,
+		zIndex: 2,
+	},
+	blueRing: {
+		width: 20,
+		height: 20,
+		borderRadius: 20,
+		backgroundColor: "rgba(255,255,255,0.2)",
+		position: "absolute",
+		bottom: -7,
+		right: 2,
+		zIndex: 1,
 	},
 });
