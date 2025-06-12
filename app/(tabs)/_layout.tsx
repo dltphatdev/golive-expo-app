@@ -12,13 +12,15 @@ export default function TabLayout() {
 				tabBarActiveTintColor: "rgba(255, 112, 72, 1)",
 				tabBarStyle: {
 					position: "absolute",
-					bottom: 50,
+					bottom: 40,
 					left: 20,
 					right: 20,
 					height: 70,
 					borderRadius: 20,
 					backgroundColor: "#2F3C50",
 					marginInline: 35,
+					borderTopWidth: 0,
+					elevation: 0,
 				},
 				tabBarItemStyle: {
 					height: "100%",
@@ -34,6 +36,7 @@ export default function TabLayout() {
 					<View
 						style={{
 							borderRadius: 16,
+							backgroundColor: "#2F3C50",
 						}}
 					/>
 				),
@@ -48,7 +51,7 @@ export default function TabLayout() {
 							<FontAwesome
 								name="home"
 								size={32}
-								color={focused ? "rgba(255, 112, 72, 1)" : "#ccc"}
+								color={focused ? "rgba(255, 112, 72, 1)" : "#fff"}
 							/>
 						</View>
 					),
@@ -63,7 +66,7 @@ export default function TabLayout() {
 							<FontAwesome
 								name="trophy"
 								size={32}
-								color={focused ? "rgba(255, 112, 72, 1)" : "#ccc"}
+								color={focused ? "rgba(255, 112, 72, 1)" : "#fff"}
 							/>
 						</View>
 					),
@@ -78,7 +81,7 @@ export default function TabLayout() {
 							<FontAwesome
 								name="shopping-bag"
 								size={26}
-								color={focused ? "rgba(255, 112, 72, 1)" : "#ccc"}
+								color={focused ? "rgba(255, 112, 72, 1)" : "#fff"}
 							/>
 						</View>
 					),
@@ -100,10 +103,17 @@ export default function TabLayout() {
 							<FontAwesome
 								name="newspaper-o"
 								size={28}
-								color={focused ? "rgba(255, 112, 72, 1)" : "#ccc"}
+								color={focused ? "rgba(255, 112, 72, 1)" : "#fff"}
 							/>
 						</View>
 					),
+				}}
+			/>
+			<Tabs.Screen
+				name="history"
+				options={{
+					tabBarLabel: "History",
+					href: null,
 				}}
 			/>
 		</Tabs>
@@ -115,6 +125,6 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 		height: "100%",
-		marginTop: 28,
+		marginTop: 30,
 	},
 });

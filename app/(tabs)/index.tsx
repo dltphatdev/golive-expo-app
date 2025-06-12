@@ -1,6 +1,8 @@
 import { CircleProgress } from "@/components/CircleProgress";
-import { Ionicons } from "@expo/vector-icons";
+import HistoryItem from "@/components/HistoryItem";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
 import {
 	Dimensions,
 	Image,
@@ -10,19 +12,26 @@ import {
 	Text,
 	View,
 } from "react-native";
+import MessageSvg from "../../assets/images/message-icon.svg";
 import StarSvg from "../../assets/images/star.svg";
 
 const { width } = Dimensions.get("window");
 export default function HomeScreen() {
 	const steps = 2045;
 	const goal = 5000;
-	const percentage = Math.min(steps / goal, 1);
-	const angle = percentage * 360;
-
+	const router = useRouter();
 	return (
 		<SafeAreaView style={styles.container}>
-			<LinearGradient colors={["#286BAF", "#77A5D4"]} style={styles.gradient}>
-				<ScrollView style={styles.content}>
+			<LinearGradient
+				colors={["#1E70C1", "#73AEE1", "#E1B7C1"]}
+				style={styles.gradient}
+				start={{ x: 0.5, y: 0 }}
+				end={{ x: 0.5, y: 1 }}
+			>
+				<ScrollView
+					style={styles.content}
+					contentContainerStyle={{ paddingBottom: 35 }}
+				>
 					{/* Header */}
 					<View style={styles.header}>
 						<View style={styles.profile}>
@@ -38,7 +47,7 @@ export default function HomeScreen() {
 								</View>
 							</View>
 						</View>
-						<Ionicons name="chatbubble-outline" size={24} color="white" />
+						<MessageSvg width={24} height={24} color="white" />
 					</View>
 					{/* Progress */}
 					<View style={styles.progressSection}>
@@ -94,11 +103,22 @@ export default function HomeScreen() {
 					<View style={styles.statsRow}>
 						<View style={styles.statCard}>
 							<Text style={styles.statNumber}>53,524</Text>
-							<Text style={styles.statLabel}>Bước</Text>
+							<View style={styles.statContainerSub}>
+								<MaterialCommunityIcons
+									name="foot-print"
+									size={32}
+									color="white"
+								/>
+								<Text style={styles.statLabel}>Bước</Text>
+							</View>
 						</View>
 						<View style={styles.statCard}>
 							<Text style={styles.statNumber}>1000</Text>
-							<Text style={styles.statLabel}>S Point</Text>
+
+							<View style={styles.statContainerSub}>
+								<MaterialCommunityIcons name="star" size={26} color="white" />
+								<Text style={styles.statLabel}>S Point</Text>
+							</View>
 						</View>
 					</View>
 
@@ -106,20 +126,16 @@ export default function HomeScreen() {
 					<View style={styles.historySection}>
 						<View style={styles.historyHeader}>
 							<Text style={styles.historyTitle}>Lịch sử</Text>
-							<Text style={styles.viewAll}>Tất cả</Text>
+							<Text
+								style={styles.viewAll}
+								onPress={() => router.push("/history")}
+							>
+								Tất cả
+							</Text>
 						</View>
 
 						{[1, 2, 3, 4, 5, 6, 7, 8].map((_, i) => (
-							<View key={i} style={styles.historyItem}>
-								<View>
-									<Text style={styles.historyDate}>27 tháng 05 năm 2025</Text>
-									<Text style={styles.historyDetail}>12.4 km • 1222 kcal</Text>
-								</View>
-								<View>
-									<Text style={styles.historyValue}>11,120</Text>
-									<Text style={styles.historyUnit}>Bước</Text>
-								</View>
-							</View>
+							<HistoryItem key={i} />
 						))}
 					</View>
 				</ScrollView>
@@ -136,7 +152,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
-		paddingVertical: 20,
+		paddingVertical: 30,
 	},
 	actionHeaderInfo: {
 		flexDirection: "row",
@@ -233,7 +249,12 @@ const styles = StyleSheet.create({
 		color: "#fff",
 		marginBottom: 5,
 	},
-	statLabel: { fontSize: 14, color: "#fff" },
+	statContainerSub: {
+		flexDirection: "row",
+		gap: 2,
+		alignItems: "center",
+	},
+	statLabel: { fontSize: 16, color: "#fff" },
 	historySection: { marginBottom: 100 },
 	historyHeader: {
 		flexDirection: "row",
@@ -243,30 +264,6 @@ const styles = StyleSheet.create({
 	},
 	historyTitle: { fontSize: 18, fontWeight: "bold", color: "white" },
 	viewAll: { fontSize: 14, color: "rgba(255,255,255,0.8)" },
-	historyItem: {
-		backgroundColor: "rgba(47,60,80,0.4)",
-		borderRadius: 12,
-		paddingHorizontal: 20,
-		paddingVertical: 20,
-		marginBottom: 10,
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
-	},
-	historyDate: {
-		fontSize: 18,
-		fontWeight: "500",
-		color: "#fff",
-		marginBottom: 4,
-	},
-	historyDetail: { fontSize: 14, color: "#fff" },
-	historyValue: {
-		fontSize: 20,
-		fontWeight: "bold",
-		color: "#fff",
-		textAlign: "right",
-	},
-	historyUnit: { fontSize: 12, color: "#fff", textAlign: "right" },
 	whiteCircle: {
 		width: 48,
 		height: 48,
@@ -277,23 +274,23 @@ const styles = StyleSheet.create({
 		position: "relative",
 	},
 	greenDot: {
-		width: 16,
-		height: 16,
+		width: 12,
+		height: 12,
 		backgroundColor: "#4CAF50",
 		borderRadius: 16,
 		position: "absolute",
-		bottom: -5,
-		right: 4,
+		bottom: -2,
+		right: 6,
 		zIndex: 2,
 	},
 	blueRing: {
-		width: 20,
-		height: 20,
+		width: 14,
+		height: 14,
 		borderRadius: 20,
 		backgroundColor: "rgba(255,255,255,0.2)",
 		position: "absolute",
-		bottom: -7,
-		right: 2,
+		bottom: -3,
+		right: 5,
 		zIndex: 1,
 	},
 });
