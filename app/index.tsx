@@ -14,7 +14,7 @@ export default function StartScreen() {
 			<ImageBackground
 				source={require("../assets/images/get-started.jpg")}
 				resizeMode="cover"
-				style={styles.container}
+				style={[styles.container, StyleSheet.absoluteFill]}
 			>
 				{/* Nội dung trong đây */}
 				<View style={styles.centered}>

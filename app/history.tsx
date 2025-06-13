@@ -1,3 +1,4 @@
+import Header from "@/components/Header";
 import HistoryItem from "@/components/HistoryItem";
 import {
 	FontAwesome5,
@@ -5,32 +6,20 @@ import {
 	MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { router } from "expo-router";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
-import MessageSvg from "../../assets/images/message-icon.svg";
 
 export default function HistoryScreen() {
 	return (
 		<SafeAreaView style={styles.container}>
-			<LinearGradient colors={["#286BAF", "#77A5D4"]} style={styles.gradient}>
+			<LinearGradient
+				colors={["#286BAF", "#77A5D4"]}
+				style={[styles.gradient, StyleSheet.absoluteFill]}
+			>
 				<ScrollView
 					style={styles.content}
 					contentContainerStyle={{ paddingBottom: 135 }}
 				>
-					<View style={styles.header}>
-						<View style={styles.headerStart}>
-							<View style={styles.headerIcon}>
-								<Ionicons
-									name="chevron-back"
-									size={20}
-									color="white"
-									onPress={() => router.back()}
-								/>
-							</View>
-							<Text style={styles.headerLabel}>Lịch sử</Text>
-						</View>
-						<MessageSvg width={24} height={24} color="white" />
-					</View>
+					<Header headerTitle="Lịch sử" />
 					{/* Time section */}
 					<View style={styles.timeSection}>
 						{/* Thời gian */}
@@ -74,26 +63,6 @@ const styles = StyleSheet.create({
 	container: { flex: 1 },
 	content: { flex: 1, padding: 20 },
 	gradient: { flex: 1 },
-	header: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
-		paddingTop: 36,
-		marginBottom: 40,
-	},
-	headerStart: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		gap: 14,
-	},
-	headerIcon: {
-		padding: 2,
-		borderWidth: 2,
-		borderColor: "rgba(255, 255, 255, 0.1)",
-		alignItems: "center",
-		borderRadius: 8,
-	},
-	headerLabel: { color: "white", fontSize: 17, fontWeight: "500" },
 	timeSection: {
 		flexDirection: "row",
 		backgroundColor: "rgba(255, 255, 255, 0.1)",

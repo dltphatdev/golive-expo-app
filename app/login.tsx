@@ -107,7 +107,10 @@ export default function LoginScreen() {
 						</View>
 
 						{/* Nút Đăng nhập */}
-						<TouchableOpacity style={styles.button}>
+						<TouchableOpacity
+							style={styles.button}
+							onPress={() => router.push("/(tabs)")}
+						>
 							<Text style={styles.buttonText}>Đăng nhập</Text>
 						</TouchableOpacity>
 					</View>

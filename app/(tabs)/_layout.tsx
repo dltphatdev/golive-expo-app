@@ -58,9 +58,9 @@ export default function TabLayout() {
 				}}
 			/>
 			<Tabs.Screen
-				name="explore"
+				name="rank"
 				options={{
-					title: "Explore",
+					title: "Rank",
 					tabBarIcon: ({ focused }) => (
 						<View style={styles.containerItemIcon}>
 							<FontAwesome
@@ -88,18 +88,11 @@ export default function TabLayout() {
 				}}
 			/>
 			<Tabs.Screen
-				name="rank"
+				name="explore"
 				options={{
-					title: "Rank",
+					title: "Explore",
 					tabBarIcon: ({ focused }) => (
-						<View
-							style={{
-								alignItems: "center",
-								justifyContent: "center",
-								height: "100%",
-								marginTop: 32,
-							}}
-						>
+						<View style={styles.rank}>
 							<FontAwesome
 								name="newspaper-o"
 								size={28}
@@ -107,13 +100,6 @@ export default function TabLayout() {
 							/>
 						</View>
 					),
-				}}
-			/>
-			<Tabs.Screen
-				name="history"
-				options={{
-					tabBarLabel: "History",
-					href: null,
 				}}
 			/>
 		</Tabs>
@@ -126,5 +112,11 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		height: "100%",
 		marginTop: 30,
+	},
+	rank: {
+		alignItems: "center",
+		justifyContent: "center",
+		height: "100%",
+		marginTop: 32,
 	},
 });

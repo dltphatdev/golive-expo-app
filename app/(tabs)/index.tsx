@@ -24,7 +24,7 @@ export default function HomeScreen() {
 		<SafeAreaView style={styles.container}>
 			<LinearGradient
 				colors={["#1E70C1", "#73AEE1", "#E1B7C1"]}
-				style={styles.gradient}
+				style={[styles.gradient, StyleSheet.absoluteFill]}
 				start={{ x: 0.5, y: 0 }}
 				end={{ x: 0.5, y: 1 }}
 			>
@@ -145,7 +145,7 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-	container: { flex: 1 },
+	container: { flex: 1, backgroundColor: "white" },
 	gradient: { flex: 1 },
 	content: { flex: 1, padding: 20 },
 	header: {
