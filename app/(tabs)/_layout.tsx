@@ -88,9 +88,9 @@ export default function TabLayout() {
 				}}
 			/>
 			<Tabs.Screen
-				name="explore"
+				name="news"
 				options={{
-					title: "Explore",
+					title: "Newspaper",
 					tabBarIcon: ({ focused }) => (
 						<View style={styles.rank}>
 							<FontAwesome

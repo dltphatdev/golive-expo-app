@@ -18,6 +18,7 @@ export default function HistoryScreen() {
 				<ScrollView
 					style={styles.content}
 					contentContainerStyle={{ paddingBottom: 135 }}
+					stickyHeaderIndices={[0]}
 				>
 					<Header headerTitle="Lịch sử" />
 					{/* Time section */}
