@@ -1,224 +1,259 @@
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
-import { router } from "expo-router";
+import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-	Image,
-	Pressable,
 	StyleSheet,
 	Text,
 	TextInput,
 	TouchableOpacity,
 	View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function LoginScreen() {
+	const router = useRouter();
+	const insets = useSafeAreaInsets();
+	const [rememberMe, setRememberMe] = useState(false);
 	const [phone, setPhone] = useState("");
 	const [password, setPassword] = useState("");
-	const [rememberMe, setRememberMe] = useState(false);
-	const [secure, setSecure] = useState(true);
-
-	/*
-  LOGIC LOGIN 
-
-  const res = await fetch('https://api.com/login', {...});
-  const data = await res.json();
-
-  if (res.ok && data.token) {
-    await AsyncStorage.setItem('token', data.token);
-    router.replace('/(auth)/(tabs)/home'); // hoặc chỉ router.replace('/')
-  } else {
-    alert('Đăng nhập thất bại');
-  }
-  */
+	const [showPassword, setShowPassword] = useState(false);
 
 	return (
-		<LinearGradient colors={["#0D57A2", "#7CACDE"]} style={styles.container}>
-			<TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-				<Ionicons name="arrow-back" size={24} color="#fff" />
-			</TouchableOpacity>
-			<View style={styles.content}>
-				<View style={styles.wrapper}>
-					<View>
-						{/* Logo */}
-						<Image
-							source={require("../assets/images/golive-logo.png")}
-							style={styles.logo}
-							resizeMode="contain"
+		<View style={[styles.container, { paddingTop: insets.top }]}>
+			{/* Nút Back */}
+			<View>
+				<TouchableOpacity
+					onPress={() => router.push("/onboarding")}
+					style={styles.backButton}
+				>
+					<Ionicons name="arrow-back" size={24} color="white" />
+				</TouchableOpacity>
+				<Image
+					source={require("../assets/images/bg-auth.png")}
+					style={{ height: 280, objectFit: "contain" }}
+				></Image>
+			</View>
+
+			{/* Banner */}
+			{/* <View style={styles.banner} /> */}
+
+			{/* Nội dung chính */}
+			<View style={styles.formContainer}>
+				<Text style={styles.title}>Xin chào 👋</Text>
+				<Text style={styles.subtitle}>
+					Hãy cùng nâng cao sức khoẻ với Go Live App
+				</Text>
+
+				{/* Số điện thoại */}
+				<Text style={styles.label}>Số điện thoại</Text>
+				<View style={styles.inputContainer}>
+					<Ionicons
+						name="call"
+						size={20}
+						color="gray"
+						style={styles.iconLeft}
+					/>
+					<TextInput
+						style={styles.input}
+						value={phone}
+						onChangeText={setPhone}
+						keyboardType="phone-pad"
+						placeholder="0967xxxxxx"
+					/>
+				</View>
+
+				{/* Mật khẩu */}
+				<Text style={styles.label}>Mật khẩu</Text>
+				<View style={styles.inputContainer}>
+					<Ionicons
+						name="lock-closed"
+						size={20}
+						color="gray"
+						style={styles.iconLeft}
+					/>
+					<TextInput
+						style={styles.input}
+						value={password}
+						onChangeText={setPassword}
+						secureTextEntry={!showPassword}
+						placeholder="Nhập mật khẩu"
+					/>
+					<TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+						<Ionicons
+							name={showPassword ? "eye" : "eye-off"}
+							size={20}
+							color="gray"
+							style={styles.iconRight}
 						/>
+					</TouchableOpacity>
+				</View>
 
-						{/* Tiêu đề */}
-						<Text style={styles.title}>Đăng nhập</Text>
-
-						{/* Input SĐT */}
-						<TextInput
-							placeholder="Số điện thoại"
-							placeholderTextColor="#ccc"
-							style={styles.input}
-							keyboardType="phone-pad"
-							value={phone}
-							onChangeText={setPhone}
-						/>
-
-						{/* Input Mật khẩu */}
-						<View style={styles.passwordContainer}>
-							<TextInput
-								placeholder="Mật khẩu"
-								placeholderTextColor="#ccc"
-								secureTextEntry={secure}
-								style={[styles.input, { flex: 1, marginBottom: 0 }]}
-								value={password}
-								onChangeText={setPassword}
-							/>
-							<Pressable
-								onPress={() => setSecure(!secure)}
-								style={styles.eyeIcon}
-							>
-								<Ionicons
-									name={secure ? "eye-off" : "eye"}
-									size={22}
-									color="#ccc"
-								/>
-							</Pressable>
-						</View>
-
-						{/* Nhớ mật khẩu + Quên mật khẩu */}
-						<View style={styles.row}>
-							<TouchableOpacity
-								style={styles.checkboxContainer}
-								onPress={() => setRememberMe(!rememberMe)}
-							>
-								<View
-									style={[
-										styles.checkbox,
-										rememberMe && styles.checkboxChecked,
-									]}
-								>
-									{rememberMe && (
-										<Ionicons name="checkmark" size={14} color="#fff" />
-									)}
-								</View>
-								<Text style={styles.checkboxText}>Nhớ mật khẩu</Text>
-							</TouchableOpacity>
-
-							<TouchableOpacity>
-								<Text style={styles.link}>Quên mật khẩu?</Text>
-							</TouchableOpacity>
-						</View>
-
-						{/* Nút Đăng nhập */}
-						<TouchableOpacity
-							style={styles.button}
-							onPress={() => router.push("/(tabs)")}
+				{/* Nhớ mật khẩu + Quên mật khẩu */}
+				<View style={styles.row}>
+					<TouchableOpacity
+						onPress={() => setRememberMe(!rememberMe)}
+						style={styles.checkboxRow}
+					>
+						<View
+							style={[
+								styles.checkboxBox,
+								rememberMe && styles.checkboxBoxChecked,
+							]}
 						>
-							<Text style={styles.buttonText}>Đăng nhập</Text>
-						</TouchableOpacity>
-					</View>
+							{rememberMe && <Text style={styles.checkboxTick}>✓</Text>}
+						</View>
+						<Text style={styles.checkboxText}>Nhớ mật khẩu</Text>
+					</TouchableOpacity>
 
-					{/* Đăng ký */}
-					<Text style={styles.footer}>
-						Chưa có tài khoản? <Text style={styles.link}>Đăng ký</Text>
-					</Text>
+					<TouchableOpacity>
+						<Text style={styles.forgotText}>Quên mật khẩu?</Text>
+					</TouchableOpacity>
 				</View>
 			</View>
-		</LinearGradient>
+
+			<View style={styles.signupContainer}>
+				{/* Đăng ký */}
+				<View style={styles.signupRow}>
+					<Text style={styles.normalText}>Bạn chưa có tài khoản? </Text>
+					<TouchableOpacity>
+						<Text style={styles.signupText}>Đăng ký ngay!</Text>
+					</TouchableOpacity>
+				</View>
+
+				{/* Nút đăng nhập */}
+				<TouchableOpacity style={styles.loginButton}>
+					<Text style={styles.loginButtonText}>Đăng nhập</Text>
+				</TouchableOpacity>
+			</View>
+		</View>
 	);
 }
+
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
+		backgroundColor: "#fff",
 	},
-	content: {
-		flex: 1,
+	backButton: {
+		position: "absolute",
+		top: 14,
+		left: 14,
+		zIndex: 10,
+		backgroundColor: "#00000044",
+		padding: 8,
+		borderRadius: 100,
 	},
-	wrapper: {
+	banner: {
+		height: 200,
+		backgroundColor: "#246BFD", // Màu nền banner
+		borderBottomLeftRadius: 20,
+		borderBottomRightRadius: 20,
+	},
+	formContainer: {
 		flex: 1,
-		justifyContent: "space-between",
 		paddingHorizontal: 24,
-		paddingBottom: 32,
-	},
-	logo: {
-		height: 177,
-		alignSelf: "center",
-		marginBottom: 24,
+		marginTop: -80,
+		backgroundColor: "#fff",
+		paddingTop: 40,
 	},
 	title: {
-		fontSize: 22,
-		fontWeight: "bold",
-		color: "#fff",
-		textAlign: "center",
-		marginBottom: 24,
+		fontSize: 26,
+		fontWeight: "600",
+		marginBottom: 6,
 	},
-	input: {
-		backgroundColor: "#2a3b4c",
-		color: "#fff",
-		borderRadius: 10,
-		paddingHorizontal: 16,
-		paddingVertical: 16,
-		fontSize: 16,
-		marginBottom: 16,
+	subtitle: {
+		color: "#888",
+		marginBottom: 20,
 	},
-	passwordContainer: {
+	label: {
+		fontSize: 18,
+		marginBottom: 6,
+		fontWeight: "700",
+		color: "rgba(65, 65, 65, 1)",
+	},
+	inputContainer: {
 		flexDirection: "row",
 		alignItems: "center",
+		borderWidth: 1,
+		borderColor: "rgba(30, 41, 64, 1)",
+		borderRadius: 12,
 		marginBottom: 16,
+		paddingHorizontal: 14,
 	},
-	eyeIcon: {
-		position: "absolute",
-		right: 16,
+	input: {
+		flex: 1,
+		paddingVertical: 20,
+	},
+	iconLeft: {
+		marginRight: 8,
+	},
+	iconRight: {
+		marginLeft: 8,
 	},
 	row: {
 		flexDirection: "row",
 		justifyContent: "space-between",
-		alignItems: "center",
-		marginBottom: 24,
+		marginBottom: 20,
 	},
-	checkboxContainer: {
+	forgotText: {
+		color: "#246BFD",
+		fontWeight: "500",
+	},
+	signupContainer: {
+		flex: 1,
+		paddingInline: 24,
+		justifyContent: "center",
+	},
+	signupRow: {
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+		marginBottom: 20,
+	},
+	normalText: {
+		color: "#444",
+	},
+	signupText: {
+		color: "#246BFD",
+		fontWeight: "500",
+	},
+	loginButton: {
+		backgroundColor: "#246BFD",
+		borderRadius: 12,
+		paddingVertical: 20,
+		alignItems: "center",
+	},
+	loginButtonText: {
+		color: "#fff",
+		fontWeight: "600",
+		fontSize: 16,
+	},
+	checkboxRow: {
 		flexDirection: "row",
 		alignItems: "center",
 	},
-	checkbox: {
-		width: 20,
-		height: 20,
-		borderRadius: 4,
+	checkboxBox: {
+		width: 19,
+		height: 19,
 		borderWidth: 1,
-		borderColor: "#fff",
+		borderColor: "#ccc",
+		borderRadius: 1,
 		marginRight: 8,
-		justifyContent: "center",
 		alignItems: "center",
+		justifyContent: "center",
 	},
-	checkboxChecked: {
-		backgroundColor: "#ff7043",
-		borderColor: "#ff7043",
+	checkboxBoxChecked: {
+		backgroundColor: "#246BFD",
+		borderColor: "#246BFD",
+	},
+	checkboxTick: {
+		color: "#fff",
+		fontSize: 14,
 	},
 	checkboxText: {
-		color: "#fff",
+		color: "rgba(30, 41, 64, 1)",
 		fontSize: 14,
-	},
-	link: {
-		color: "#fff",
-		textDecorationLine: "underline",
-		fontWeight: "bold",
-	},
-	button: {
-		backgroundColor: "#ff7043",
-		paddingVertical: 14,
-		borderRadius: 12,
-		alignItems: "center",
-		marginBottom: 16,
-	},
-	buttonText: {
-		color: "#fff",
-		fontSize: 18,
-		fontWeight: "bold",
-	},
-	footer: {
-		textAlign: "center",
-		color: "#fff",
-		fontSize: 14,
-	},
-	backButton: {
-		paddingTop: 50,
-		paddingInline: 24,
+		fontWeight: "500",
 	},
 });

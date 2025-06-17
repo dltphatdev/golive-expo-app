@@ -1,36 +1,39 @@
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
+import { useEffect } from "react";
 import {
-	ImageBackground,
+	Dimensions,
+	Image,
 	SafeAreaView,
 	StyleSheet,
-	Text,
-	TouchableOpacity,
 	View,
 } from "react-native";
-
+const { width, height } = Dimensions.get("window");
 export default function StartScreen() {
+	const router = useRouter();
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			router.replace("/onboarding"); // 👈 chuyển sang màn hình onboarding
+		}, 3000); // 3 giây
+
+		return () => clearTimeout(timer); // dọn timer nếu unmount
+	}, [router]);
 	return (
 		<SafeAreaView style={styles.container}>
-			<ImageBackground
-				source={require("../assets/images/get-started.jpg")}
-				resizeMode="cover"
-				style={[styles.container, StyleSheet.absoluteFill]}
-			>
-				{/* Nội dung trong đây */}
-				<View style={styles.centered}>
-					<Text style={styles.title}>GoLive App</Text>
-					<Text style={styles.subtitle}>
-						Đi bộ – Sức khỏe – Tích điểm –{"\n"}Đổi quà – Mua sắm
-					</Text>
+			<View style={styles.container}>
+				{/* Nền bản đồ mờ */}
+				<Image
+					source={require("../assets/images/map-streaming.png")}
+					style={styles.map}
+					resizeMode="contain"
+				/>
 
-					<TouchableOpacity
-						style={styles.button}
-						onPress={() => router.push("/login")}
-					>
-						<Text style={styles.buttonText}>Bắt đầu</Text>
-					</TouchableOpacity>
-				</View>
-			</ImageBackground>
+				{/* Logo chính giữa */}
+				<Image
+					source={require("../assets/images/golive-logo-streaming.png")}
+					style={styles.logo}
+					resizeMode="contain"
+				/>
+			</View>
 		</SafeAreaView>
 	);
 }
@@ -38,38 +41,18 @@ export default function StartScreen() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-	},
-	centered: {
-		flex: 1,
+		backgroundColor: "#235DFF",
 		alignItems: "center",
-		justifyContent: "flex-end",
-		paddingHorizontal: 24,
-		paddingBottom: 60,
+		justifyContent: "center",
 	},
-	title: {
-		fontSize: 32,
-		fontWeight: "bold",
-		color: "#fff",
-		marginBottom: 12,
+	map: {
+		position: "absolute",
+		width,
+		height,
+		opacity: 0.2,
 	},
-	subtitle: {
-		fontSize: 16,
-		color: "#fff",
-		textAlign: "center",
-		marginBottom: 40,
-		lineHeight: 24,
-	},
-	button: {
-		backgroundColor: "#FA724B",
-		paddingVertical: 14,
-		paddingHorizontal: 40,
-		borderRadius: 12,
-		width: 300,
-	},
-	buttonText: {
-		color: "#fff",
-		fontSize: 18,
-		fontWeight: "bold",
-		textAlign: "center",
+	logo: {
+		width: 120,
+		height: 120,
 	},
 });
