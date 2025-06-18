@@ -61,7 +61,6 @@ export default function Onboarding() {
 		}
 	);
 	const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 50 });
-
 	return (
 		<View
 			style={{

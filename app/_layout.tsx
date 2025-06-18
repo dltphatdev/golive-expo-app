@@ -1,3 +1,4 @@
+import TokenInitializer from "@/components/TokenInitializer";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import {
 	DarkTheme,
@@ -49,14 +50,15 @@ export default function RootLayout() {
     });
   });
   */
-
 	return (
 		<SafeAreaProvider>
 			<ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+				<TokenInitializer />
 				<Stack initialRouteName="index">
 					<Stack.Screen name="index" options={{ headerShown: false }} />
 					<Stack.Screen name="onboarding" options={{ headerShown: false }} />
 					<Stack.Screen name="login" options={{ headerShown: false }} />
+					<Stack.Screen name="register" options={{ headerShown: false }} />
 					<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 					<Stack.Screen name="+not-found" />
 				</Stack>

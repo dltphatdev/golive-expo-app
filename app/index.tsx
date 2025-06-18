@@ -12,22 +12,20 @@ export default function StartScreen() {
 	const router = useRouter();
 	useEffect(() => {
 		const timer = setTimeout(() => {
-			router.replace("/onboarding"); // 👈 chuyển sang màn hình onboarding
+			router.replace("/onboarding");
 		}, 3000); // 3 giây
 
-		return () => clearTimeout(timer); // dọn timer nếu unmount
+		return () => clearTimeout(timer);
 	}, [router]);
+
 	return (
 		<SafeAreaView style={styles.container}>
 			<View style={styles.container}>
-				{/* Nền bản đồ mờ */}
 				<Image
 					source={require("../assets/images/map-streaming.png")}
 					style={styles.map}
 					resizeMode="contain"
 				/>
-
-				{/* Logo chính giữa */}
 				<Image
 					source={require("../assets/images/golive-logo-streaming.png")}
 					style={styles.logo}
