@@ -1,4 +1,5 @@
 import { User } from "@/app/types/user";
+import { eventEmitter } from "@/app/utils/eventEmitter";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const getAccessTokenFromLS = async () => {
@@ -28,4 +29,5 @@ export const setProfileToLS = async (profile: User) => {
 
 export const clearLS = async () => {
 	await AsyncStorage.multiRemove(["access_token", "refresh_token", "profile"]);
+	eventEmitter.emit("clearLS");
 };

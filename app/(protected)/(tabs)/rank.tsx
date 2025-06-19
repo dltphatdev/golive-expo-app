@@ -17,48 +17,48 @@ const data = [
 		name: "Phat",
 		score: 10000,
 		rank: 1,
-		avatar: require("../../assets/images/react-logo.png"),
+		avatar: require("../../../assets/images/react-logo.png"),
 	},
 	{
 		id: "2",
 		name: "Phi",
 		score: 9000,
 		rank: 2,
-		avatar: require("../../assets/images/react-logo.png"),
+		avatar: require("../../../assets/images/react-logo.png"),
 	},
 	{
 		id: "3",
 		name: "Thanh",
 		score: 8000,
 		rank: 3,
-		avatar: require("../../assets/images/react-logo.png"),
+		avatar: require("../../../assets/images/react-logo.png"),
 	},
 	{
 		id: "4",
 		name: "Mr A",
 		rank: 2,
-		avatar: require("../../assets/images/react-logo.png"),
+		avatar: require("../../../assets/images/react-logo.png"),
 		score: 7000,
 	},
 	{
 		id: "5",
 		name: "Mr B",
 		rank: 3,
-		avatar: require("../../assets/images/react-logo.png"),
+		avatar: require("../../../assets/images/react-logo.png"),
 		score: 6000,
 	},
 	{
 		id: "6",
 		name: "Ms C",
 		rank: 4,
-		avatar: require("../../assets/images/react-logo.png"),
+		avatar: require("../../../assets/images/react-logo.png"),
 		score: 5000,
 	},
 	{
 		id: "7",
 		name: "Ms D",
 		rank: 5,
-		avatar: require("../../assets/images/react-logo.png"),
+		avatar: require("../../../assets/images/react-logo.png"),
 		score: 6000,
 	},
 ];
@@ -131,13 +131,13 @@ export default function RankScreen() {
 					{/* Stats */}
 					<View style={styles.statBar}>
 						<View>
-							<Image source={require("../../assets/images/2.png")} />
+							<Image source={require("../../../assets/images/2.png")} />
 						</View>
 						<View>
-							<Image source={require("../../assets/images/1.png")} />
+							<Image source={require("../../../assets/images/1.png")} />
 						</View>
 						<View>
-							<Image source={require("../../assets/images/3.png")} />
+							<Image source={require("../../../assets/images/3.png")} />
 						</View>
 					</View>
 

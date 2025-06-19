@@ -1,4 +1,9 @@
-import { URL_LOGIN, URL_LOGOUT, URL_REFRESH_TOKEN } from "@/app/apis/user.api";
+import {
+	URL_LOGIN,
+	URL_LOGOUT,
+	URL_REFRESH_TOKEN,
+	URL_REGISTER,
+} from "@/app/apis/user.api";
 import { ErrorResponseApi } from "@/app/types/common";
 import { UserSuccessResponeApi } from "@/app/types/user";
 import {
@@ -6,6 +11,7 @@ import {
 	getAccessTokenFromLS,
 	getRefreshTokenFromLS,
 	setAccessTokenToLS,
+	setProfileToLS,
 	setRefreshTokenToLS,
 } from "@/app/utils/auth";
 import {
@@ -61,12 +67,13 @@ class HttpClient {
 		this.instance.interceptors.response.use(
 			(response) => {
 				const { url } = response.config;
-				if (url === URL_LOGIN) {
+				if (url === URL_LOGIN || url === URL_REGISTER) {
 					const data = response.data as UserSuccessResponeApi;
 					this.accessToken = data.data.access_token;
 					this.refreshToken = data.data.refresh_token;
 					setAccessTokenToLS(this.accessToken);
 					setRefreshTokenToLS(this.refreshToken);
+					setProfileToLS(data.data.user);
 				} else if (url === URL_LOGOUT) {
 					this.accessToken = "";
 					this.refreshToken = "";

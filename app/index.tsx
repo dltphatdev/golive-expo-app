@@ -12,7 +12,7 @@ export default function StartScreen() {
 	const router = useRouter();
 	useEffect(() => {
 		const timer = setTimeout(() => {
-			router.replace("/onboarding");
+			router.replace("/(auth)/onboarding");
 		}, 3000); // 3 giây
 
 		return () => clearTimeout(timer);

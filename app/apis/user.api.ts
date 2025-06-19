@@ -14,11 +14,14 @@ export const URL_REFRESH_TOKEN = "user/refresh-token";
 export const URL_REGISTER = "user/register";
 
 const userApi = {
-	login(body: { email: string; password: string }) {
+	login(body: { email: string; password: string; remember_me?: boolean }) {
 		return http.instance.post<UserSuccessResponeApi>(URL_LOGIN, body);
 	},
 	register(body: { email: string; password: string }) {
 		return http.instance.post<UserSuccessResponeApi>(URL_REGISTER, body);
+	},
+	verifyEmailUser(body: { verify_code: string }) {
+		return http.instance.post<{ message: string }>("user/verify-email", body);
 	},
 	logout(body: { refresh_token: string }) {
 		return http.instance.post<{ message: string }>(URL_LOGOUT, body);
