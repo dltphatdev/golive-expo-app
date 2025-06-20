@@ -64,3 +64,9 @@ Join our community of developers creating universal apps.
   }
 ]
 ```
+
+### Build syntax
+
+```bash
+npx expo prebuild --clean
+```

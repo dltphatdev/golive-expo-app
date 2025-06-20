@@ -22,16 +22,14 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as yup from "yup";
-
 const formData = yup.object({
-	verify_code: yup
+	email: yup
 		.string()
-		.required("Mã xác thực là bắt buộc")
-		.max(6, "Mã xác thực cho phép tối đa 6 chữ số"),
+		.email("Email không hợp lệ")
+		.required("Vui lòng nhập email"),
 });
 type FormData = yup.InferType<typeof formData>;
-
-export default function VerifyEmailScreen() {
+export default function ForgotPasswordScreen() {
 	const router = useRouter();
 	const [isLoading, setIsLoading] = useState(false);
 	const insets = useSafeAreaInsets();
@@ -42,21 +40,21 @@ export default function VerifyEmailScreen() {
 		formState: { errors },
 	} = useForm<FormData>({
 		defaultValues: {
-			verify_code: "",
+			email: "",
 		},
 		resolver: yupResolver(formData) as Resolver<FormData>,
 	});
-	const onSubmit = async (data: FormData) => {
+	const onSubmit = async (data: Pick<FormData, "email">) => {
 		setIsLoading(true);
 		try {
-			const res = await userApi.verifyEmailUser(data);
+			const res = await userApi.forgotPassword(data);
 			Alert.alert(
-				"Thông báo xác thực",
+				"Thông báo yêu cầu lấy lại mật khẩu",
 				res.data.message,
 				[
 					{
 						text: "OK",
-						onPress: () => router.push("/(protected)/(tabs)"),
+						onPress: () => router.push("/(auth)/reset-password"),
 					},
 				],
 				{ cancelable: false }
@@ -111,33 +109,33 @@ export default function VerifyEmailScreen() {
 
 						{/* Nội dung chính */}
 						<View style={styles.formContainer}>
-							<Text style={styles.title}>Xác thực tài khoản Golive 👋</Text>
+							<Text style={styles.title}>
+								Yêu cầu lấy lại mật khẩu Golive 👋
+							</Text>
 							<Text style={styles.subtitle}>
 								Hãy cùng nâng cao sức khoẻ với Go Live App
 							</Text>
-
-							{/* Code */}
+							{/* Email */}
 							<Controller
 								control={control}
-								name="verify_code"
+								name="email"
 								render={({ field: { onChange, value } }) => (
 									<Input
-										labelText="Mã xác thực"
-										icon="code"
-										placeholder="Nhập mã xác thực"
+										labelText="Email"
+										icon="mail"
+										placeholder="Nhập email"
 										onChangeText={onChange}
 										value={value}
-										keyboardType="numeric"
+										keyboardType="email-address"
 										autoCapitalize="none"
 									/>
 								)}
 							/>
-							{errors.verify_code && (
+							{errors.email && (
 								<Text style={{ color: "red", marginBottom: 12 }}>
-									{errors.verify_code.message}
+									{errors.email.message}
 								</Text>
 							)}
-
 							<View style={styles.signupContainer}>
 								<TouchableOpacity
 									style={[styles.loginButton, isLoading && { opacity: 0.7 }]}
@@ -147,7 +145,7 @@ export default function VerifyEmailScreen() {
 									{isLoading ? (
 										<ActivityIndicator color="#fff" />
 									) : (
-										<Text style={styles.loginButtonText}>Xác thực</Text>
+										<Text style={styles.loginButtonText}>Gửi yêu cầu</Text>
 									)}
 								</TouchableOpacity>
 							</View>
@@ -158,6 +156,7 @@ export default function VerifyEmailScreen() {
 		</KeyboardAvoidingView>
 	);
 }
+
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -188,6 +187,7 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 	},
 	signupContainer: {
+		flex: 1,
 		justifyContent: "center",
 	},
 	loginButton: {

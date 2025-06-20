@@ -1,127 +1,179 @@
-import { FontAwesome } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import React from "react";
-import { StyleSheet, TouchableWithoutFeedback, View } from "react-native";
+import { Building2, FileText, Home, ShoppingCart } from "lucide-react-native";
+import { useEffect } from "react";
+import { Pressable, Text, View } from "react-native";
+import Animated, {
+	useAnimatedStyle,
+	useSharedValue,
+	withSpring,
+} from "react-native-reanimated";
 
-export default function TabLayout() {
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+interface TabBarButtonProps {
+	onPress: () => void;
+	onLongPress: () => void;
+	isFocused: boolean;
+	label: string;
+	icon: any;
+	index: number;
+}
+
+function TabBarButton({
+	onPress,
+	onLongPress,
+	isFocused,
+	label,
+	icon: Icon,
+}: TabBarButtonProps) {
+	const scale = useSharedValue(1);
+	const opacity = useSharedValue(isFocused ? 1 : 0.6);
+	const translateY = useSharedValue(0);
+
+	useEffect(() => {
+		scale.value = withSpring(isFocused ? 1.1 : 1, {
+			damping: 15,
+			stiffness: 150,
+		});
+		opacity.value = withSpring(isFocused ? 1 : 0.6);
+		translateY.value = withSpring(isFocused ? -2 : 0);
+	}, [isFocused, opacity, scale, translateY]);
+
+	const animatedStyle = useAnimatedStyle(() => ({
+		transform: [{ scale: scale.value }, { translateY: translateY.value }],
+		opacity: opacity.value,
+	}));
+
+	const backgroundStyle = useAnimatedStyle(() => ({
+		backgroundColor: "#fff",
+	}));
+
+	const handlePressIn = () => {
+		scale.value = withSpring(1, { damping: 15, stiffness: 200 });
+	};
+
 	return (
-		<>
-			<Tabs
-				screenOptions={{
-					headerShown: false,
-					tabBarShowLabel: false,
-					tabBarActiveTintColor: "rgba(255, 112, 72, 1)",
-					tabBarStyle: {
-						position: "absolute",
-						bottom: 40,
-						left: 20,
-						right: 20,
-						height: 70,
-						borderRadius: 20,
-						backgroundColor: "#2F3C50",
-						marginInline: 35,
-						borderTopWidth: 0,
-						elevation: 0,
-					},
-					tabBarItemStyle: {
-						height: "100%",
-						justifyContent: "center",
+		<AnimatedPressable
+			onPress={onPress}
+			onLongPress={onLongPress}
+			onPressIn={handlePressIn}
+			style={[
+				{
+					alignItems: "center",
+					justifyContent: "space-between",
+					borderRadius: 10,
+					minWidth: isFocused ? 126 : 60,
+				},
+				backgroundStyle,
+			]}
+		>
+			<Animated.View
+				style={[
+					{
 						alignItems: "center",
+						justifyContent: "center",
+						flexDirection: "row",
+						gap: 8,
+						padding: 16,
 					},
-					tabBarButton: (props) => (
-						<TouchableWithoutFeedback
-							onPress={props.onPress}
-							accessible={false}
-						>
-							<View style={{ flex: 1 }}>{props.children}</View>
-						</TouchableWithoutFeedback>
-					),
-					tabBarBackground: () => (
-						<View
-							style={{
-								borderRadius: 16,
-								backgroundColor: "#2F3C50",
-							}}
-						/>
-					),
-				}}
+					animatedStyle,
+				]}
 			>
-				<Tabs.Screen
-					name="index"
-					options={{
-						title: "Home",
-						tabBarIcon: ({ focused }) => (
-							<View style={styles.containerItemIcon}>
-								<FontAwesome
-									name="home"
-									size={32}
-									color={focused ? "rgba(255, 112, 72, 1)" : "#fff"}
-								/>
-							</View>
-						),
+				<Icon size={28} color="rgba(34, 34, 96, 1)" strokeWidth={2} />
+				<Text
+					style={{
+						fontSize: 14,
+						color: "rgba(34, 34, 96, 1)",
+						marginTop: 5,
+						display: isFocused ? "flex" : "none",
 					}}
-				/>
-				<Tabs.Screen
-					name="rank"
-					options={{
-						title: "Rank",
-						tabBarIcon: ({ focused }) => (
-							<View style={styles.containerItemIcon}>
-								<FontAwesome
-									name="trophy"
-									size={32}
-									color={focused ? "rgba(255, 112, 72, 1)" : "#fff"}
-								/>
-							</View>
-						),
-					}}
-				/>
-				<Tabs.Screen
-					name="setting"
-					options={{
-						title: "Setting",
-						tabBarIcon: ({ focused }) => (
-							<View style={styles.containerItemIcon}>
-								<FontAwesome
-									name="shopping-bag"
-									size={26}
-									color={focused ? "rgba(255, 112, 72, 1)" : "#fff"}
-								/>
-							</View>
-						),
-					}}
-				/>
-				<Tabs.Screen
-					name="news"
-					options={{
-						title: "Newspaper",
-						tabBarIcon: ({ focused }) => (
-							<View style={styles.rank}>
-								<FontAwesome
-									name="newspaper-o"
-									size={28}
-									color={focused ? "rgba(255, 112, 72, 1)" : "#fff"}
-								/>
-							</View>
-						),
-					}}
-				/>
-			</Tabs>
-		</>
+				>
+					{label}
+				</Text>
+			</Animated.View>
+		</AnimatedPressable>
 	);
 }
 
-const styles = StyleSheet.create({
-	containerItemIcon: {
-		alignItems: "center",
-		justifyContent: "center",
-		height: "100%",
-		marginTop: 30,
-	},
-	rank: {
-		alignItems: "center",
-		justifyContent: "center",
-		height: "100%",
-		marginTop: 32,
-	},
-});
+export default function TabLayout() {
+	const activeIndex = useSharedValue(0);
+
+	const tabs = [
+		{ name: "index", label: "Trang chủ", icon: Home },
+		{ name: "rank", label: "Xếp hạng", icon: Building2 },
+		{ name: "news", label: "Tin tức", icon: FileText },
+		{ name: "store", label: "Cửa hàng", icon: ShoppingCart },
+	];
+
+	return (
+		<Tabs
+			screenOptions={{
+				headerShown: false,
+			}}
+			tabBar={({ state, navigation }) => {
+				return (
+					<View
+						style={{
+							flexDirection: "row",
+							alignItems: "center",
+							justifyContent: "space-between",
+							gap: 12,
+							backgroundColor: "rgba(34, 34, 96, 1)",
+							paddingBottom: 30,
+							paddingTop: 16,
+							borderTopLeftRadius: 16,
+							borderTopRightRadius: 16,
+							paddingHorizontal: 20,
+							shadowOffset: {
+								width: 0,
+								height: -2,
+							},
+						}}
+					>
+						{state.routes.map((route, index) => {
+							const isFocused = state.index === index;
+							const tab = tabs[index];
+
+							const onPress = () => {
+								const event = navigation.emit({
+									type: "tabPress",
+									target: route.key,
+									canPreventDefault: true,
+								});
+
+								if (!isFocused && !event.defaultPrevented) {
+									navigation.navigate(route.name);
+									activeIndex.value = withSpring(index);
+								}
+							};
+
+							const onLongPress = () => {
+								navigation.emit({
+									type: "tabLongPress",
+									target: route.key,
+								});
+							};
+
+							return (
+								<TabBarButton
+									key={route.key}
+									onPress={onPress}
+									onLongPress={onLongPress}
+									isFocused={isFocused}
+									label={tab.label}
+									icon={tab.icon}
+									index={index}
+								/>
+							);
+						})}
+					</View>
+				);
+			}}
+		>
+			<Tabs.Screen name="index" options={{ title: "Trang chủ" }} />
+			<Tabs.Screen name="rank" options={{ title: "Xếp hạng" }} />
+			<Tabs.Screen name="news" options={{ title: "Tin tức" }} />
+			<Tabs.Screen name="cart" options={{ title: "Cửa hàng" }} />
+		</Tabs>
+	);
+}

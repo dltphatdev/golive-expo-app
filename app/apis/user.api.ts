@@ -2,7 +2,6 @@ import { SuccessResponseApi } from "@/app/types/common";
 import {
 	BodyUserProfile,
 	ChangePasswordUserReqBody,
-	ResetPasswordReqBody,
 	User,
 	UserSuccessResponeApi,
 } from "@/app/types/user";
@@ -35,11 +34,8 @@ const userApi = {
 	getProfile() {
 		return http.instance.get<SuccessResponseApi<User>>("user/me");
 	},
-	resetPassword(body: ResetPasswordReqBody) {
-		return http.instance.patch<SuccessResponseApi<{ message: string }>>(
-			"user/reset-password",
-			body
-		);
+	resetPassword(body: { forgot_password_code: string; password: string }) {
+		return http.instance.post<{ message: string }>("user/reset-password", body);
 	},
 	uploadAvatar(body: FormData) {
 		return http.instance.post<
@@ -56,6 +52,12 @@ const userApi = {
 	},
 	changePasswordUser(body: ChangePasswordUserReqBody) {
 		return http.instance.put<{ message: string }>("user/change-password", body);
+	},
+	forgotPassword(body: { email: string }) {
+		return http.instance.post<{ message: string }>(
+			"user/forgot-password",
+			body
+		);
 	},
 };
 

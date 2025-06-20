@@ -1,10 +1,10 @@
 import ProtectedRoute from "@/components/ProtectedRoute";
-import { Stack } from "expo-router";
+import { Slot } from "expo-router";
 
 export default function ProtectedLayout() {
 	return (
 		<ProtectedRoute>
-			<Stack />
+			<Slot />
 		</ProtectedRoute>
 	);
 }
