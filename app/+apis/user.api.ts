@@ -1,11 +1,11 @@
-import { SuccessResponseApi } from "@/app/types/common";
+import { SuccessResponseApi } from "@/app/+types/common";
 import {
 	BodyUserProfile,
 	ChangePasswordUserReqBody,
 	User,
 	UserSuccessResponeApi,
-} from "@/app/types/user";
-import http from "@/app/utils/http";
+} from "@/app/+types/user";
+import http from "@/app/+utils/http";
 
 export const URL_LOGIN = "user/login";
 export const URL_LOGOUT = "user/logout";

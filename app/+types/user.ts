@@ -1,4 +1,4 @@
-import { SuccessResponseApi } from "@/app/types/common";
+import { SuccessResponseApi } from "@/app/+types/common";
 
 export type UserVerifyStatus = "Unverified" | "Verified" | "Banned";
 

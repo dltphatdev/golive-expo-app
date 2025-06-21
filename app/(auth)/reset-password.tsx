@@ -1,4 +1,5 @@
-import userApi from "@/app/apis/user.api";
+import userApi from "@/app/+apis/user.api";
+import { resetPasswordSchema } from "@/app/+utils/validation";
 import Input from "@/components/Input";
 import httpStatusCode from "@/constants/httpStatusCode";
 import { Ionicons } from "@expo/vector-icons";
@@ -22,21 +23,8 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as yup from "yup";
-const formData = yup.object({
-	forgot_password_code: yup
-		.string()
-		.required("Mã xác thực là bắt buộc")
-		.max(6, "Mã xác thực cho phép tối đa 6 chữ số"),
-	password: yup
-		.string()
-		.min(6, "Mật khẩu tối thiểu 6 ký tự")
-		.max(160, "Mật khẩu tối đa 160 ký tự")
-		.required("Vui lòng nhập mật khẩu"),
-	confirm_password: yup
-		.string()
-		.oneOf([yup.ref("password")], "Mật khẩu không khớp")
-		.required("Vui lòng xác nhận mật khẩu"),
-});
+
+const formData = resetPasswordSchema;
 type FormData = yup.InferType<typeof formData>;
 
 export default function ResetPasswordScreen() {

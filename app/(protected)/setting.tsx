@@ -1,6 +1,7 @@
-import userApi from "@/app/apis/user.api";
-import { AppContext } from "@/app/context/app.context";
-import { getRefreshTokenFromLS } from "@/app/utils/auth";
+import userApi from "@/app/+apis/user.api";
+import { AppContext } from "@/app/+context/app.context";
+import { getRefreshTokenFromLS } from "@/app/+utils/auth";
+
 import httpStatusCode from "@/constants/httpStatusCode";
 import { useRouter } from "expo-router";
 import { useContext } from "react";
@@ -12,17 +13,16 @@ export default function SettingScreen() {
 	const handleLogout = async () => {
 		try {
 			const refresh_token = await getRefreshTokenFromLS();
-			const res = await userApi.logout({ refresh_token });
+			const res = await userApi.logout({
+				refresh_token: refresh_token as string,
+			});
 			Alert.alert(
 				"Thông báo đăng xuất",
 				res.data.message,
 				[
 					{
 						text: "OK",
-						onPress: () => {
-							reset();
-							router.push("/");
-						},
+						onPress: reset,
 					},
 				],
 				{ cancelable: false }

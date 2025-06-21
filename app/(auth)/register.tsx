@@ -1,5 +1,6 @@
-import userApi from "@/app/apis/user.api";
-import { AppContext } from "@/app/context/app.context";
+import userApi from "@/app/+apis/user.api";
+import { AppContext } from "@/app/+context/app.context";
+import { registerSchema } from "@/app/+utils/validation";
 import Input from "@/components/Input";
 import httpStatusCode from "@/constants/httpStatusCode";
 import { Ionicons } from "@expo/vector-icons";
@@ -27,32 +28,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as yup from "yup";
 
-const formData = yup.object({
-	fullname: yup
-		.string()
-		.required("Vui lòng nhập họ tên")
-		.min(2, "Họ tên tối thiểu 6 ký tự")
-		.max(160, "Họ tên tối đa 160 ký tự"),
-	email: yup
-		.string()
-		.email("Email không hợp lệ")
-		.required("Vui lòng nhập email"),
-	password: yup
-		.string()
-		.min(6, "Mật khẩu tối thiểu 6 ký tự")
-		.max(160, "Mật khẩu tối đa 160 ký tự")
-		.required("Vui lòng nhập mật khẩu"),
-	confirm_password: yup
-		.string()
-		.oneOf([yup.ref("password")], "Mật khẩu không khớp")
-		.required("Vui lòng xác nhận mật khẩu"),
-	date_of_birth: yup.date().max(new Date(), "Ngày tháng năm sinh chưa hợp lệ"),
-	phone: yup.string().required().max(10, "Số điện thoại chỉ có thể 10 số"),
-	gender: yup
-		.string()
-		.oneOf(["Male", "Female"], "Giới tính không hợp lệ")
-		.required("Vui lòng chọn giới tính"),
-});
+const formData = registerSchema;
 type FormData = yup.InferType<typeof formData>;
 
 export default function RegisterSreen() {

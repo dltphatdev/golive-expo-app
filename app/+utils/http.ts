@@ -3,9 +3,9 @@ import {
 	URL_LOGOUT,
 	URL_REFRESH_TOKEN,
 	URL_REGISTER,
-} from "@/app/apis/user.api";
-import { ErrorResponseApi } from "@/app/types/common";
-import { UserSuccessResponeApi } from "@/app/types/user";
+} from "@/app/+apis/user.api";
+import { ErrorResponseApi } from "@/app/+types/common";
+import { UserSuccessResponeApi } from "@/app/+types/user";
 import {
 	clearLS,
 	getAccessTokenFromLS,
@@ -13,11 +13,12 @@ import {
 	setAccessTokenToLS,
 	setProfileToLS,
 	setRefreshTokenToLS,
-} from "@/app/utils/auth";
+} from "@/app/+utils/auth";
 import {
 	isAxiosExpiredTokenError,
 	isAxiosUnauthorizedError,
-} from "@/app/utils/common";
+} from "@/app/+utils/common";
+
 import CONFIG from "@/constants/config";
 import httpStatusCode from "@/constants/httpStatusCode";
 import axios, {

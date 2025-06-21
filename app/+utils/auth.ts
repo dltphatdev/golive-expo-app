@@ -1,13 +1,13 @@
-import { User } from "@/app/types/user";
-import { eventEmitter } from "@/app/utils/eventEmitter";
+import { User } from "@/app/+types/user";
+import { eventEmitter } from "@/app/+utils/eventEmitter";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const getAccessTokenFromLS = async () => {
-	return (await AsyncStorage.getItem("access_token")) || "";
+	return AsyncStorage.getItem("access_token") || "";
 };
 
 export const getRefreshTokenFromLS = async () => {
-	return (await AsyncStorage.getItem("refresh_token")) || "";
+	return AsyncStorage.getItem("refresh_token") || "";
 };
 
 export const setAccessTokenToLS = async (access_token: string) => {

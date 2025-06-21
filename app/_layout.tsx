@@ -1,4 +1,4 @@
-import { AppProvider } from "@/app/context/app.context";
+import { AppProvider } from "@/app/+context/app.context";
 import AuthListener from "@/components/AuthListener";
 import TokenInitializer from "@/components/TokenInitializer";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -19,16 +19,14 @@ export default function RootLayout() {
 		Poppins: require("../assets/fonts/Poppins-Regular.ttf"),
 	});
 
-	if (!loaded) {
-		return null;
-	}
+	if (!loaded) return null;
 
 	return (
 		<SafeAreaProvider>
 			<ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
 				<AppProvider>
-					<AuthListener />
 					<TokenInitializer />
+					<AuthListener />
 					<Stack>
 						<Stack.Screen name="index" options={{ headerShown: false }} />
 						<Stack.Screen name="(auth)" options={{ headerShown: false }} />

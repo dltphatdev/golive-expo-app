@@ -1,5 +1,6 @@
-import userApi from "@/app/apis/user.api";
-import { AppContext } from "@/app/context/app.context";
+import userApi from "@/app/+apis/user.api";
+import { AppContext } from "@/app/+context/app.context";
+import { loginSchema } from "@/app/+utils/validation";
 import Input from "@/components/Input";
 import httpStatusCode from "@/constants/httpStatusCode";
 import { Ionicons } from "@expo/vector-icons";
@@ -24,17 +25,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as yup from "yup";
 
-const formData = yup.object({
-	email: yup
-		.string()
-		.email("Email không hợp lệ")
-		.required("Vui lòng nhập email"),
-	password: yup
-		.string()
-		.min(6, "Mật khẩu tối thiểu 6 ký tự")
-		.max(160, "Mật khẩu tối đa 160 ký tự")
-		.required("Vui lòng nhập mật khẩu"),
-});
+const formData = loginSchema;
 type FormData = yup.InferType<typeof formData>;
 
 export default function LoginScreen() {
@@ -195,7 +186,9 @@ export default function LoginScreen() {
 									<Text style={styles.checkboxText}>Nhớ mật khẩu</Text>
 								</TouchableOpacity>
 
-								<TouchableOpacity>
+								<TouchableOpacity
+									onPress={() => router.push("/forgot-password")}
+								>
 									<Text style={styles.forgotText}>Quên mật khẩu?</Text>
 								</TouchableOpacity>
 							</View>

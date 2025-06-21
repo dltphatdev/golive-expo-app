@@ -1,4 +1,5 @@
-import userApi from "@/app/apis/user.api";
+import userApi from "@/app/+apis/user.api";
+import { forgotPasswordSchema } from "@/app/+utils/validation";
 import Input from "@/components/Input";
 import httpStatusCode from "@/constants/httpStatusCode";
 import { Ionicons } from "@expo/vector-icons";
@@ -22,12 +23,8 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as yup from "yup";
-const formData = yup.object({
-	email: yup
-		.string()
-		.email("Email không hợp lệ")
-		.required("Vui lòng nhập email"),
-});
+
+const formData = forgotPasswordSchema;
 type FormData = yup.InferType<typeof formData>;
 export default function ForgotPasswordScreen() {
 	const router = useRouter();
@@ -54,7 +51,7 @@ export default function ForgotPasswordScreen() {
 				[
 					{
 						text: "OK",
-						onPress: () => router.push("/(auth)/reset-password"),
+						onPress: () => router.push("/reset-password"),
 					},
 				],
 				{ cancelable: false }
@@ -136,7 +133,7 @@ export default function ForgotPasswordScreen() {
 									{errors.email.message}
 								</Text>
 							)}
-							<View style={styles.signupContainer}>
+							<View>
 								<TouchableOpacity
 									style={[styles.loginButton, isLoading && { opacity: 0.7 }]}
 									onPress={handleSubmit(onSubmit)}
@@ -185,10 +182,6 @@ const styles = StyleSheet.create({
 	subtitle: {
 		color: "#888",
 		marginBottom: 20,
-	},
-	signupContainer: {
-		flex: 1,
-		justifyContent: "center",
 	},
 	loginButton: {
 		backgroundColor: "#246BFD",

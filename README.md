@@ -70,3 +70,11 @@ Join our community of developers creating universal apps.
 ```bash
 npx expo prebuild --clean
 ```
+
+## Tính thời gian vận động trong ngày
+
+```ts
+const durationInMinutes = Math.floor(
+	(new Date(endTime).getTime() - new Date(startTime).getTime()) / 1000 / 60
+);
+```

@@ -1,4 +1,5 @@
-import userApi from "@/app/apis/user.api";
+import userApi from "@/app/+apis/user.api";
+import { verifyEmailSchema } from "@/app/+utils/validation";
 import Input from "@/components/Input";
 import httpStatusCode from "@/constants/httpStatusCode";
 import { Ionicons } from "@expo/vector-icons";
@@ -23,12 +24,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as yup from "yup";
 
-const formData = yup.object({
-	verify_code: yup
-		.string()
-		.required("Mã xác thực là bắt buộc")
-		.max(6, "Mã xác thực cho phép tối đa 6 chữ số"),
-});
+const formData = verifyEmailSchema;
 type FormData = yup.InferType<typeof formData>;
 
 export default function VerifyEmailScreen() {

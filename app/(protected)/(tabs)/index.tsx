@@ -1,4 +1,4 @@
-import { getStepsToday } from "@/app/utils/common";
+import { getGoogleFitDataAndroid } from "@/app/+utils/googleFit";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 
@@ -7,8 +7,8 @@ export default function HomeScreen() {
 	useEffect(() => {
 		const fetchSteps = async () => {
 			try {
-				const stepCount = await getStepsToday();
-				setSteps(stepCount);
+				const data = await getGoogleFitDataAndroid();
+				setSteps(data?.steps as number);
 			} catch (error) {
 				console.log("Lỗi khi lấy bước chân:", error);
 			}

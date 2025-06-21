@@ -173,7 +173,7 @@ export default function TabLayout() {
 			<Tabs.Screen name="index" options={{ title: "Trang chủ" }} />
 			<Tabs.Screen name="rank" options={{ title: "Xếp hạng" }} />
 			<Tabs.Screen name="news" options={{ title: "Tin tức" }} />
-			<Tabs.Screen name="cart" options={{ title: "Cửa hàng" }} />
+			<Tabs.Screen name="store" options={{ title: "Cửa hàng" }} />
 		</Tabs>
 	);
 }

@@ -1,5 +1,6 @@
+import { AppContext } from "@/app/+context/app.context";
 import { useRouter } from "expo-router";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import {
 	Dimensions,
 	Image,
@@ -10,13 +11,18 @@ import {
 const { width, height } = Dimensions.get("window");
 export default function StartScreen() {
 	const router = useRouter();
+	const { isAuthenticated, isInitializing } = useContext(AppContext);
 	useEffect(() => {
-		const timer = setTimeout(() => {
-			router.replace("/(auth)/onboarding");
-		}, 3000); // 3 giây
-
-		return () => clearTimeout(timer);
-	}, [router]);
+		if (isInitializing) return;
+		if (isAuthenticated) {
+			router.replace("/(protected)/(tabs)");
+		} else {
+			const timer = setTimeout(() => {
+				router.replace("/(auth)/onboarding");
+			}, 3000);
+			return () => clearTimeout(timer);
+		}
+	}, [router, isAuthenticated, isInitializing]);
 
 	return (
 		<SafeAreaView style={styles.container}>
@@ -27,7 +33,7 @@ export default function StartScreen() {
 					resizeMode="contain"
 				/>
 				<Image
-					source={require("../assets/images/golive-logo-streaming.png")}
+					source={require("../assets/images/app-golive-getting-started.png")}
 					style={styles.logo}
 					resizeMode="contain"
 				/>

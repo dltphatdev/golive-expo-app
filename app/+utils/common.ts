@@ -1,13 +1,12 @@
-import { ErrorResponseApi } from "@/app/types/common";
-import { getStepsTodayAndroid } from "@/app/utils/googleFit";
-import { getStepsTodayIOS } from "@/app/utils/iosFit";
+import { ErrorResponseApi } from "@/app/+types/common";
+
 import httpStatusCode from "@/constants/httpStatusCode";
 import axios, { AxiosError } from "axios";
-import { Platform } from "react-native";
 
 export function isAxiosError<TypeError>(
 	error: unknown
 ): error is AxiosError<TypeError> {
+	// eslint-disable-next-line import/no-named-as-default-member
 	return axios.isAxiosError(error);
 }
 
@@ -39,8 +38,8 @@ export function isAxiosExpiredTokenError<ExpiredTokenError>(
 	);
 }
 
-export const getStepsToday = async (): Promise<number> => {
-	return Platform.OS === "ios"
-		? await getStepsTodayIOS()
-		: await getStepsTodayAndroid();
-};
+// export const getStepsToday = async (): Promise<number> => {
+// 	return Platform.OS === "ios"
+// 		? await getStepsTodayIOS()
+// 		: await getGoogleFitDataAndroid();
+// };

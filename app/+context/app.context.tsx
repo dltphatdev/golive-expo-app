@@ -1,6 +1,5 @@
-import { User } from "@/app/types/user";
-import { getProfileFromLS } from "@/app/utils/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { User } from "@/app/+types/user";
+import { getAccessTokenFromLS, getProfileFromLS } from "@/app/+utils/auth";
 import { createContext, useEffect, useState } from "react";
 
 interface AppContextInterface {
@@ -9,38 +8,40 @@ interface AppContextInterface {
 	profile: User | null;
 	setProfile: React.Dispatch<React.SetStateAction<User | null>>;
 	reset: () => void;
+	isInitializing: boolean;
 }
 
-// Tạo context
 export const AppContext = createContext<AppContextInterface>({
 	isAuthenticated: false,
 	setIsAuthenticated: () => null,
 	profile: null,
 	setProfile: () => null,
 	reset: () => null,
+	isInitializing: true,
 });
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [profile, setProfile] = useState<User | null>(null);
+	const [isInitializing, setIsInitializing] = useState(true);
 	useEffect(() => {
 		// Load từ AsyncStorage
-		const loadAuth = async () => {
-			const accessToken = await AsyncStorage.getItem("access_token");
-			const profileData = await getProfileFromLS();
-
+		async function loadAuth() {
+			const [accessToken, profileData] = await Promise.all([
+				getAccessTokenFromLS(),
+				getProfileFromLS(),
+			]);
 			if (accessToken && profileData) {
 				setIsAuthenticated(true);
 				setProfile(profileData);
 			}
-		};
-
+			setIsInitializing(false);
+		}
 		loadAuth();
 	}, []);
 	const reset = async () => {
 		setIsAuthenticated(false);
 		setProfile(null);
-		await AsyncStorage.multiRemove(["access_token", "profile"]);
 	};
 	return (
 		<AppContext.Provider
@@ -50,6 +51,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 				profile,
 				setProfile,
 				reset,
+				isInitializing,
 			}}
 		>
 			{children}
