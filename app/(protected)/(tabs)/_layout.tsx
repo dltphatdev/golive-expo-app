@@ -1,108 +1,20 @@
+import IconTabHome from "@/assets/images/tab-home.svg";
+import IconTabNews from "@/assets/images/tab-news.svg";
+import IconTabRank from "@/assets/images/tab-rank.svg";
+import IconTabStore from "@/assets/images/tab-store.svg";
+import TabBarButton from "@/components/TabBarButton";
 import { Tabs } from "expo-router";
-import { Building2, FileText, Home, ShoppingCart } from "lucide-react-native";
-import { useEffect } from "react";
-import { Pressable, Text, View } from "react-native";
-import Animated, {
-	useAnimatedStyle,
-	useSharedValue,
-	withSpring,
-} from "react-native-reanimated";
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
-interface TabBarButtonProps {
-	onPress: () => void;
-	onLongPress: () => void;
-	isFocused: boolean;
-	label: string;
-	icon: any;
-	index: number;
-}
-
-function TabBarButton({
-	onPress,
-	onLongPress,
-	isFocused,
-	label,
-	icon: Icon,
-}: TabBarButtonProps) {
-	const scale = useSharedValue(1);
-	const opacity = useSharedValue(isFocused ? 1 : 0.6);
-	const translateY = useSharedValue(0);
-
-	useEffect(() => {
-		scale.value = withSpring(isFocused ? 1.1 : 1, {
-			damping: 15,
-			stiffness: 150,
-		});
-		opacity.value = withSpring(isFocused ? 1 : 0.6);
-		translateY.value = withSpring(isFocused ? -2 : 0);
-	}, [isFocused, opacity, scale, translateY]);
-
-	const animatedStyle = useAnimatedStyle(() => ({
-		transform: [{ scale: scale.value }, { translateY: translateY.value }],
-		opacity: opacity.value,
-	}));
-
-	const backgroundStyle = useAnimatedStyle(() => ({
-		backgroundColor: "#fff",
-	}));
-
-	const handlePressIn = () => {
-		scale.value = withSpring(1, { damping: 15, stiffness: 200 });
-	};
-
-	return (
-		<AnimatedPressable
-			onPress={onPress}
-			onLongPress={onLongPress}
-			onPressIn={handlePressIn}
-			style={[
-				{
-					alignItems: "center",
-					justifyContent: "space-between",
-					borderRadius: 10,
-					minWidth: isFocused ? 126 : 60,
-				},
-				backgroundStyle,
-			]}
-		>
-			<Animated.View
-				style={[
-					{
-						alignItems: "center",
-						justifyContent: "center",
-						flexDirection: "row",
-						gap: 8,
-						padding: 16,
-					},
-					animatedStyle,
-				]}
-			>
-				<Icon size={28} color="rgba(34, 34, 96, 1)" strokeWidth={2} />
-				<Text
-					style={{
-						fontSize: 14,
-						color: "rgba(34, 34, 96, 1)",
-						marginTop: 5,
-						display: isFocused ? "flex" : "none",
-					}}
-				>
-					{label}
-				</Text>
-			</Animated.View>
-		</AnimatedPressable>
-	);
-}
+import { StyleSheet, View } from "react-native";
+import { useSharedValue, withSpring } from "react-native-reanimated";
 
 export default function TabLayout() {
 	const activeIndex = useSharedValue(0);
 
 	const tabs = [
-		{ name: "index", label: "Trang chủ", icon: Home },
-		{ name: "rank", label: "Xếp hạng", icon: Building2 },
-		{ name: "news", label: "Tin tức", icon: FileText },
-		{ name: "store", label: "Cửa hàng", icon: ShoppingCart },
+		{ name: "index", label: "Trang chủ", icon: IconTabHome },
+		{ name: "rank", label: "Xếp hạng", icon: IconTabRank },
+		{ name: "news", label: "Tin tức", icon: IconTabNews },
+		{ name: "store", label: "Cửa hàng", icon: IconTabStore },
 	];
 
 	return (
@@ -112,27 +24,11 @@ export default function TabLayout() {
 			}}
 			tabBar={({ state, navigation }) => {
 				return (
-					<View
-						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							justifyContent: "space-between",
-							gap: 12,
-							backgroundColor: "rgba(34, 34, 96, 1)",
-							paddingBottom: 30,
-							paddingTop: 16,
-							borderTopLeftRadius: 16,
-							borderTopRightRadius: 16,
-							paddingHorizontal: 20,
-							shadowOffset: {
-								width: 0,
-								height: -2,
-							},
-						}}
-					>
+					<View style={styles.tabBar}>
 						{state.routes.map((route, index) => {
 							const isFocused = state.index === index;
-							const tab = tabs[index];
+							const tab = tabs.find((t) => t.name === route.name);
+							if (!tab) return null;
 
 							const onPress = () => {
 								const event = navigation.emit({
@@ -173,7 +69,20 @@ export default function TabLayout() {
 			<Tabs.Screen name="index" options={{ title: "Trang chủ" }} />
 			<Tabs.Screen name="rank" options={{ title: "Xếp hạng" }} />
 			<Tabs.Screen name="news" options={{ title: "Tin tức" }} />
-			<Tabs.Screen name="store" options={{ title: "Cửa hàng" }} />
+			<Tabs.Screen name="store" options={{ title: "Cài đặt" }} />
 		</Tabs>
 	);
 }
+
+const styles = StyleSheet.create({
+	tabBar: {
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between",
+		gap: 12,
+		backgroundColor: "rgba(34, 34, 96, 1)",
+		paddingBottom: 30,
+		paddingTop: 16,
+		paddingHorizontal: 20,
+	},
+});

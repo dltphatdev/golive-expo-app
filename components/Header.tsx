@@ -1,26 +1,31 @@
-import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
-import MessageSvg from "../assets/images/message-icon.svg";
+import HeaderSpoint from "@/assets/images/header-spoint.svg";
+import StrakeIcon from "@/assets/images/strake.svg";
+import { useRouter } from "expo-router";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-interface Props {
-	headerTitle?: string;
-}
-export default function Header({ headerTitle }: Props) {
+export default function Header() {
+	const router = useRouter();
+	const handlePressNavigateSetting = () => router.push("/(protected)/setting");
 	return (
 		<View style={styles.header}>
-			<View style={styles.headerStart}>
-				<View style={styles.headerIcon}>
-					<Ionicons
-						name="chevron-back"
-						size={20}
-						color="white"
-						onPress={() => router.back()}
+			<View style={styles.headerLeft}>
+				<TouchableOpacity onPress={handlePressNavigateSetting}>
+					<Image
+						style={{ width: 30 }}
+						source={require("@/assets/images/avatar.png")}
+						width={30}
+						resizeMode="contain"
 					/>
+				</TouchableOpacity>
+				<View style={styles.headerStrake}>
+					<StrakeIcon width={14} height={18} />
+					<Text style={styles.headerStrakeText}>Chuỗi 2 ngày liên tục</Text>
 				</View>
-				<Text style={styles.headerLabel}>{headerTitle}</Text>
 			</View>
-			<MessageSvg width={24} height={24} color="white" />
+			<View style={styles.headerRight}>
+				<HeaderSpoint width={21} />
+				<Text style={styles.headerSpointNumber}>3.034</Text>
+			</View>
 		</View>
 	);
 }
@@ -30,20 +35,38 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
-		paddingTop: 36,
-		marginBottom: 40,
 	},
-	headerStart: {
+	headerLeft: {
 		flexDirection: "row",
-		justifyContent: "space-between",
-		gap: 14,
-	},
-	headerIcon: {
-		padding: 3,
-		borderWidth: 2,
-		borderColor: "rgba(255, 255, 255, 0.1)",
 		alignItems: "center",
-		borderRadius: 8,
+		gap: 5,
 	},
-	headerLabel: { color: "white", fontSize: 17, fontWeight: "500" },
+	headerStrake: {
+		flexDirection: "row",
+		gap: 9,
+		alignItems: "center",
+		paddingVertical: 8,
+		paddingInline: 14,
+		backgroundColor: "rgba(255, 255, 255, 0.2)",
+		borderRadius: 60,
+	},
+	headerStrakeText: {
+		fontSize: 12,
+		fontWeight: 600,
+		color: "white",
+	},
+	headerSpointNumber: {
+		fontSize: 12,
+		fontWeight: 600,
+		color: "white",
+	},
+	headerRight: {
+		flexDirection: "row",
+		gap: 4,
+		alignItems: "center",
+		paddingVertical: 8,
+		paddingInline: 12,
+		backgroundColor: "rgba(255, 255, 255, 0.2)",
+		borderRadius: 60,
+	},
 });
