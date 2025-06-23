@@ -2,27 +2,18 @@ import { CircleProgress } from "@/components/CircleProgress";
 import Header from "@/components/Header";
 import MetricCard from "@/components/MetricCard";
 import WeeklyChart from "@/components/WeeklyChart";
+import useMockStepWhenAppOpen from "@/hooks/useMockStepWhenAppOpen";
+import useStepSyncOnFocus from "@/hooks/useStepSyncOnFocus";
 import { LinearGradient } from "expo-linear-gradient";
+
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function HomeScreen() {
-	// const [steps, setSteps] = useState(0);
-	// useEffect(() => {
-	// 	const fetchSteps = async () => {
-	// 		try {
-	// 			const data = await getGoogleFitDataAndroid();
-	// 			setSteps(data?.steps as number);
-	// 		} catch (error) {
-	// 			console.log("Lỗi khi lấy bước chân:", error);
-	// 		}
-	// 	};
-
-	// 	fetchSteps();
-	// }, []);
-
-	const steps = 2045;
 	const goal = 5000;
+	const step = 3800;
 
+	useMockStepWhenAppOpen(); // Khi mở app
+	useStepSyncOnFocus(); // Khi app quay lại
 	return (
 		<SafeAreaView style={styles.container}>
 			<LinearGradient
@@ -39,7 +30,7 @@ export default function HomeScreen() {
 					<Header />
 
 					{/* CircleProgress */}
-					<CircleProgress steps={steps} goal={goal} />
+					<CircleProgress steps={step} goal={goal} />
 
 					{/* WeeklyChart */}
 					<WeeklyChart />

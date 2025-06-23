@@ -93,18 +93,34 @@ export const getGoogleFitDataAndroid = async () => {
 		const startDate = new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
 		const endDate = new Date().toISOString();
 
-		const [steps, distance, calories, sleep, heartRate, weight] =
-			await Promise.all([
-				getStepCount(startDate, endDate),
-				getDistance(startDate, endDate),
-				getCalories(startDate, endDate),
-				getSleep({ startDate, endDate }),
-				getHeartRate(startDate, endDate),
-				getWeight(startDate, endDate),
-				getStartEndTime(startDate, endDate),
-			]);
+		const [
+			steps,
+			distance,
+			calories,
+			sleep,
+			heartRate,
+			weight,
+			{ startTime, endTime },
+		] = await Promise.all([
+			getStepCount(startDate, endDate),
+			getDistance(startDate, endDate),
+			getCalories(startDate, endDate),
+			getSleep({ startDate, endDate }),
+			getHeartRate(startDate, endDate),
+			getWeight(startDate, endDate),
+			getStartEndTime(startDate, endDate),
+		]);
 
-		return { steps, distance, calories, sleep, heartRate, weight };
+		return {
+			steps,
+			distance,
+			calories,
+			sleep,
+			heartRate,
+			weight,
+			startTime,
+			endTime,
+		};
 	} catch (err) {
 		console.warn("Google Fit error:", err);
 		return null;

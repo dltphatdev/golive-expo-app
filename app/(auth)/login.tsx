@@ -88,7 +88,6 @@ export default function LoginScreen() {
 			setIsLoading(false);
 		}
 	};
-
 	return (
 		<KeyboardAvoidingView
 			style={{ flex: 1 }}
