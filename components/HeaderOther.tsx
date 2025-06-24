@@ -17,10 +17,13 @@ export default function HeaderOther() {
 					<Text style={styles.headerStrakeText}>Chuỗi 2 ngày liên tục</Text>
 				</View>
 			</View>
-			<View style={styles.headerRight}>
+			<TouchableOpacity
+				style={styles.headerRight}
+				onPress={() => router.push("/(protected)/history")}
+			>
 				<HeaderSpoint width={21} />
 				<Text style={styles.headerSpointNumber}>3.034</Text>
-			</View>
+			</TouchableOpacity>
 		</View>
 	);
 }

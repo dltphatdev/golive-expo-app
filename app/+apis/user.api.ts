@@ -2,6 +2,8 @@ import { SuccessResponseApi } from "@/app/+types/common";
 import {
 	BodyUserProfile,
 	ChangePasswordUserReqBody,
+	LoginReqBody,
+	RegisterReqBody,
 	User,
 	UserSuccessResponeApi,
 } from "@/app/+types/user";
@@ -13,10 +15,10 @@ export const URL_REFRESH_TOKEN = "user/refresh-token";
 export const URL_REGISTER = "user/register";
 
 const userApi = {
-	login(body: { email: string; password: string; remember_me?: boolean }) {
+	login(body: LoginReqBody) {
 		return http.instance.post<UserSuccessResponeApi>(URL_LOGIN, body);
 	},
-	register(body: { email: string; password: string }) {
+	register(body: RegisterReqBody) {
 		return http.instance.post<UserSuccessResponeApi>(URL_REGISTER, body);
 	},
 	verifyEmailUser(body: { verify_code: string }) {

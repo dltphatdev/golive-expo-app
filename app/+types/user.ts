@@ -36,13 +36,29 @@ export interface ChangePasswordUserReqBody {
 
 export interface BodyUserProfile {
 	avatar?: string;
-	date_of_birth?: string;
+	date_of_birth?: string | Date;
 	fullname?: string;
 	phone?: string;
 	address?: string;
 	password?: string;
+	gender?: "Male" | "Female";
 }
 export interface ResetPasswordReqBody {
 	id: number;
 	password: string;
+}
+
+export interface LoginReqBody {
+	email: string;
+	password: string;
+	remember_me?: boolean;
+}
+
+export interface RegisterReqBody {
+	email: string;
+	password: string;
+	date_of_birth: string | Date;
+	gender: "Male" | "Female";
+	fullname: string;
+	phone: string;
 }

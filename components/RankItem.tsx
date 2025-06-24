@@ -1,7 +1,7 @@
 import Spoint from "@/assets/images/header-spoint.svg";
 import { LinearGradient } from "expo-linear-gradient";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-export default function StreamItem() {
+export default function RankItem() {
 	return (
 		<LinearGradient
 			colors={["#4A499A", "#717099"]}

@@ -1,10 +1,16 @@
+import userApi from "@/app/+apis/user.api";
+import { AppContext } from "@/app/+context/app.context";
+import { getRefreshTokenFromLS } from "@/app/+utils/auth";
 import ProfileButton from "@/assets/images/profile-btn.svg";
 import HeaderOther from "@/components/HeaderOther";
 import MenuOption from "@/components/MenuOption";
-import { FontAwesome5 } from "@expo/vector-icons";
+import httpStatusCode from "@/constants/httpStatusCode";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
+import { useContext } from "react";
 import {
+	Alert,
 	Image,
 	SafeAreaView,
 	ScrollView,
@@ -99,6 +105,35 @@ const menus = [
 
 export default function SettingScreen() {
 	const router = useRouter();
+	const { reset } = useContext(AppContext);
+	const handleLogout = async () => {
+		try {
+			const refresh_token = await getRefreshTokenFromLS();
+			const res = await userApi.logout({
+				refresh_token: refresh_token as string,
+			});
+			Alert.alert(
+				"Thông báo đăng xuất",
+				res.data.message,
+				[
+					{
+						text: "OK",
+						onPress: reset,
+					},
+				],
+				{ cancelable: false }
+			);
+		} catch (error: any) {
+			if (error.status === httpStatusCode.UnprocessableEntity) {
+				const formError = error.response?.data?.errors;
+				if (formError) {
+					Object.keys(formError).forEach((key) => {
+						console.log(formError[key as keyof FormData]["msg"]);
+					});
+				}
+			}
+		}
+	};
 
 	return (
 		<SafeAreaView style={styles.container}>
@@ -136,14 +171,21 @@ export default function SettingScreen() {
 						/>
 						<View style={styles.profileInfo}>
 							<Text style={styles.profileFullName} numberOfLines={1}>
-								Họ và tên
+								Nguyễn Văn A
 							</Text>
 							<View style={styles.boxProfileBottom}>
 								<Text style={styles.profilePhone}>0987165432</Text>
 								<View style={styles.profileVerify}>
-									<Text style={styles.profileVerifyText}>Da xac thuc</Text>
+									<Text style={styles.profileVerifyText}>Đã xác thực</Text>
 								</View>
 							</View>
+							<TouchableOpacity
+								style={{ flexDirection: "row", gap: 8 }}
+								onPress={handleLogout}
+							>
+								<Text style={{ color: "white", fontSize: 14 }}>Đăng xuất</Text>
+								<Ionicons name="log-out-outline" size={22} color="white" />
+							</TouchableOpacity>
 						</View>
 					</LinearGradient>
 

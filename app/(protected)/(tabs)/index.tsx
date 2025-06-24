@@ -24,13 +24,15 @@ export default function HomeScreen() {
 			>
 				<ScrollView
 					style={styles.content}
-					contentContainerStyle={{ paddingBottom: 35 }}
+					contentContainerStyle={{ paddingBottom: 55 }}
 				>
 					{/* Header */}
 					<Header />
 
 					{/* CircleProgress */}
-					<CircleProgress steps={step} goal={goal} />
+					<View style={styles.crcleProgressWp}>
+						<CircleProgress steps={step} goal={goal} />
+					</View>
 
 					{/* WeeklyChart */}
 					<WeeklyChart />
@@ -49,7 +51,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
 	container: { flex: 1 },
 	gradient: { flex: 1 },
-	content: { flex: 1, paddingVertical: 20, paddingInline: 10 },
+	content: { flex: 1, paddingVertical: 40, paddingInline: 10 },
 	metricBox: {
 		marginTop: 16,
 	},
@@ -58,5 +60,8 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		fontWeight: 600,
 		marginBottom: 10,
+	},
+	crcleProgressWp: {
+		marginTop: 20,
 	},
 });

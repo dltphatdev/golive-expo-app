@@ -68,3 +68,30 @@ export const verifyEmailSchema = yup.object({
 		.required("Mã xác thực là bắt buộc")
 		.max(6, "Mã xác thực cho phép tối đa 6 chữ số"),
 });
+
+export const updateProfileSchema = yup.object({
+	avatar: yup
+		.string()
+		.transform((value) => (value === "" ? undefined : value))
+		.max(1000, "Ảnh đại diện không vượt quá 1000 ký tự")
+		.optional(),
+	address: yup
+		.string()
+		.transform((value) => (value === "" ? undefined : value))
+		.max(160, "Địa không được vượt quá 160 ký tự")
+		.optional(),
+	fullname: yup
+		.string()
+		.min(2, "Họ tên tối thiểu 6 ký tự")
+		.max(160, "Họ tên tối đa 160 ký tự")
+		.optional(),
+	date_of_birth: yup
+		.date()
+		.max(new Date(), "Ngày tháng năm sinh chưa hợp lệ")
+		.optional(),
+	phone: yup.string().max(10, "Số điện thoại chỉ có thể 10 số").optional(),
+	gender: yup
+		.string()
+		.oneOf(["Male", "Female"], "Giới tính không hợp lệ")
+		.optional(),
+});

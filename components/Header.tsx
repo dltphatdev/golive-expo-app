@@ -11,7 +11,7 @@ export default function Header() {
 			<View style={styles.headerLeft}>
 				<TouchableOpacity onPress={handlePressNavigateSetting}>
 					<Image
-						style={{ width: 30 }}
+						style={{ width: 30, height: 30 }}
 						source={require("@/assets/images/avatar.png")}
 						width={30}
 						resizeMode="contain"
@@ -22,10 +22,13 @@ export default function Header() {
 					<Text style={styles.headerStrakeText}>Chuỗi 2 ngày liên tục</Text>
 				</View>
 			</View>
-			<View style={styles.headerRight}>
+			<TouchableOpacity
+				style={styles.headerRight}
+				onPress={() => router.push("/(protected)/history")}
+			>
 				<HeaderSpoint width={21} />
 				<Text style={styles.headerSpointNumber}>3.034</Text>
-			</View>
+			</TouchableOpacity>
 		</View>
 	);
 }
