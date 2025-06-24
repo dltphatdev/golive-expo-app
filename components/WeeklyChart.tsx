@@ -1,3 +1,6 @@
+import { ChartStep } from "@/app/+types/step";
+import { formatNumberToSocicalStyle } from "@/app/+utils/common";
+import { sortChartDataByWeek } from "@/app/+utils/sortChartDataByWeek";
 import Check from "@/assets/images/Check.svg";
 import { LinearGradient } from "expo-linear-gradient";
 import {
@@ -9,38 +12,31 @@ import {
 } from "react-native";
 import Svg, { Circle, Polyline } from "react-native-svg";
 
-interface ChartData {
-	day: string;
-	value: string;
-	completed: boolean;
-	chartValue: number;
+interface Props {
+	data: ChartStep[];
 }
 
 const { width } = Dimensions.get("window");
 
-export default function WeeklyChart() {
-	const chartWidth = width - 40; // paddingHorizontal: 20 * 2
-	const chartHeight = 130;
+export default function WeeklyChart({ data }: Props) {
+	if (!data || !data.length) return null;
+	const sortedData = sortChartDataByWeek(data);
+	const chartWidth = width - 40; // 40 = 20 padding trái + phải
+	const chartHeight = 90;
+	const columnCount = 7;
+	const labelWidth = chartWidth / columnCount;
 
-	const data: ChartData[] = [
-		{ day: "Thứ 2", value: "2.2K", completed: true, chartValue: 30 },
-		{ day: "Thứ 3", value: "2.2K", completed: true, chartValue: 80 },
-		{ day: "Thứ 4", value: "2.2K", completed: true, chartValue: 45 },
-		{ day: "Thứ 5", value: "2.2K", completed: true, chartValue: 25 },
-		{ day: "Thứ 6", value: "2.2K", completed: true, chartValue: 35 },
-		{ day: "Thứ 7", value: "2.2K", completed: true, chartValue: 75 },
-		{ day: "CN", value: "2.2K", completed: true, chartValue: 60 },
-	];
+	// Tính toán các điểm (x, y)
+	const chartPoints = sortedData.map((item, index) => {
+		const x = index * labelWidth + labelWidth / 2;
+		let y = chartHeight - (item.chartValue / 100) * chartHeight;
+		// Tránh cắt vòng tròn đáy
+		if (y > chartHeight - 6) y = chartHeight - 6;
+		return { x, y };
+	});
 
-	const labelWidth = chartWidth / data.length; // 7 cột chia đều
-
-	const points = data
-		.map((item, index) => {
-			const x = index * labelWidth + labelWidth / 2;
-			const y = chartHeight - (item.chartValue / 100) * chartHeight;
-			return `${x},${y}`;
-		})
-		.join(" ");
+	// Kết hợp điểm cho polyline
+	const points = chartPoints.map((p) => `${p.x},${p.y}`).join(" ");
 	return (
 		<LinearGradient
 			colors={["rgba(31, 113, 163, 0.3)", "rgba(153, 153, 153, 0.3)"]}
@@ -51,7 +47,7 @@ export default function WeeklyChart() {
 			<View style={styles.content}>
 				{/* Header (icon + label) */}
 				<View style={[styles.headerRow, { width: chartWidth }]}>
-					{data.map((item, index) => (
+					{sortedData.map((item: ChartStep, index: number) => (
 						<View
 							key={index}
 							style={{
@@ -59,8 +55,8 @@ export default function WeeklyChart() {
 								alignItems: "center",
 							}}
 						>
-							<Check width={18} height={18} />
-							<Text style={styles.dayText}>{item.day}</Text>
+							{item.isCompleted && <Check width={18} height={18} />}
+							<Text style={styles.dayText}>{item.date}</Text>
 						</View>
 					))}
 				</View>
@@ -68,10 +64,10 @@ export default function WeeklyChart() {
 				{/* Biểu đồ */}
 				<View>
 					<ImageBackground
-						resizeMode="contain"
+						resizeMode="stretch"
 						source={require("@/assets/images/grap-chart.png")}
 					>
-						<Svg width={chartWidth + labelWidth} height={chartHeight}>
+						<Svg width={chartWidth} height={chartHeight}>
 							<Polyline
 								points={points}
 								fill="none"
@@ -80,30 +76,31 @@ export default function WeeklyChart() {
 								strokeLinecap="round"
 								strokeLinejoin="round"
 							/>
-							{data.map((item, index) => {
-								const x = index * labelWidth + labelWidth / 2;
-								const y = chartHeight - (item.chartValue / 100) * chartHeight;
-								return (
-									<Circle
-										key={index}
-										cx={x}
-										cy={y}
-										r="6"
-										fill="rgba(255, 255, 255, 0.5)"
-										stroke="white"
-										strokeWidth="2"
-									/>
-								);
-							})}
+							{chartPoints.map((point, index) => (
+								<Circle
+									key={index}
+									cx={point.x}
+									cy={point.y}
+									r="6"
+									fill="rgba(255, 255, 255, 0.5)"
+									stroke="white"
+									strokeWidth="2"
+								/>
+							))}
 						</Svg>
 					</ImageBackground>
 				</View>
 
 				{/* Value labels */}
-				<View style={styles.valueRow}>
-					{data.map((item, index) => (
-						<View key={index} style={styles.valueContainer}>
-							<Text style={styles.valueText}>{item.value}</Text>
+				<View style={[styles.valueRow]}>
+					{sortedData.map((item: ChartStep, index: number) => (
+						<View
+							key={index}
+							style={[styles.valueContainer, { width: labelWidth - 8 }]}
+						>
+							<Text style={styles.valueText}>
+								{formatNumberToSocicalStyle(item.steps)}
+							</Text>
 						</View>
 					))}
 				</View>
@@ -120,40 +117,38 @@ const styles = StyleSheet.create({
 	},
 	content: {
 		flex: 1,
-		overflow: "hidden",
 		paddingInline: 5,
 	},
 	dayText: {
 		color: "rgba(205, 205, 205, 1)",
-		fontSize: 14,
+		fontSize: 12,
 		fontWeight: "500",
-		marginTop: 8,
+		marginTop: 6,
+		marginBottom: 10,
 	},
 	headerRow: {
 		flexDirection: "row",
 		justifyContent: "space-between",
-		alignItems: "center",
+		alignItems: "flex-end",
 	},
 	valueRow: {
 		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
-		paddingBottom: 12,
-		paddingInline: 5,
+		justifyContent: "center",
+		marginTop: 10,
+		gap: 8,
+		paddingBottom: 10,
 	},
 	valueContainer: {
 		backgroundColor: "rgba(255, 255, 255, 0.15)",
-		paddingVertical: 4,
-		paddingInline: 5,
+		paddingVertical: 2,
 		borderRadius: 5,
 		borderWidth: 1,
 		borderColor: "rgba(255, 255, 255, 0.6)",
-		marginHorizontal: 2,
-		alignItems: "center",
 	},
 	valueText: {
 		color: "rgba(255, 255, 255, 1)",
 		fontSize: 12,
 		fontWeight: "500",
+		textAlign: "center",
 	},
 });

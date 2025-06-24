@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import NewsItem from "@/components/NewsItem";
 import SlideCarousel from "@/components/SlideCarousel";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
@@ -14,7 +15,7 @@ export default function NewsScreen() {
 			>
 				<ScrollView
 					style={styles.content}
-					contentContainerStyle={{ paddingBottom: 35 }}
+					contentContainerStyle={{ paddingBottom: 65 }}
 				>
 					{/* Header */}
 					<View style={styles.wrapContent}>
@@ -24,6 +25,16 @@ export default function NewsScreen() {
 					{/* Slide */}
 					<View style={styles.slideWp}>
 						<SlideCarousel />
+					</View>
+
+					<View style={[styles.wrapContent, { marginTop: 20 }]}>
+						<View style={styles.news}>
+							{Array(6)
+								.fill(0)
+								.map((_, index) => {
+									return <NewsItem key={index} />;
+								})}
+						</View>
 					</View>
 				</ScrollView>
 			</LinearGradient>
@@ -38,5 +49,11 @@ const styles = StyleSheet.create({
 	content: { flex: 1, paddingVertical: 40 },
 	slideWp: {
 		marginTop: 16,
+	},
+	news: {
+		gap: 10,
+		flexDirection: "row",
+		flexWrap: "wrap",
+		justifyContent: "space-between",
 	},
 });

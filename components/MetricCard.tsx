@@ -48,7 +48,7 @@ export default function MetricCard() {
 						<Text style={styles.metricCardBottomSpointTag}>-</Text>
 						<Spoint width={21} />
 						<Text style={styles.metricCardBottomSpointNumber} numberOfLines={1}>
-							3.034
+							00.00
 						</Text>
 					</LinearGradient>
 				</View>

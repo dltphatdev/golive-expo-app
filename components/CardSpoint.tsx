@@ -6,7 +6,7 @@ export default function CardSpoint() {
 		<View style={styles.container}>
 			<View style={styles.cardTop}>
 				<Spoint width={21} />
-				<Text style={styles.spoint}>97,123</Text>
+				<Text style={styles.spoint}>00.00</Text>
 			</View>
 			<Text style={styles.label}>Đã dùng</Text>
 		</View>

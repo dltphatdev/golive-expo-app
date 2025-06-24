@@ -9,6 +9,19 @@ export function isAxiosError<TypeError>(
 	// eslint-disable-next-line import/no-named-as-default-member
 	return axios.isAxiosError(error);
 }
+export function formatNumberCurrency(currency: number) {
+	return Intl.NumberFormat("de-DE").format(currency);
+}
+
+export function formatNumberToSocicalStyle(value: number) {
+	return Intl.NumberFormat("en", {
+		notation: "compact",
+		maximumFractionDigits: 1,
+	})
+		.format(value)
+		.replace(".", ",")
+		.toLocaleLowerCase();
+}
 
 export function isAxiosUnprocessableEntityError<UnprocessableEntityError>(
 	error: unknown

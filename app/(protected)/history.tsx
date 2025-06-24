@@ -30,13 +30,13 @@ export default function HistoryScreen() {
 					>
 						<View style={styles.historyMainTop}>
 							<View style={styles.historySpointTop}>
-								<Text style={styles.historySpointTopText}>19,912</Text>
+								<Text style={styles.historySpointTopText}>00.00</Text>
 								<Spoint width={21} />
 							</View>
 							<View style={styles.historyTimeInfo}>
 								<Text style={styles.historyTimeInfoLabel}>Cập nhật lúc</Text>
 								<Text style={styles.historyTimeInfoLabelNumber}>
-									12:30:59 04/04/2025
+									00:00:00 04/04/2025
 								</Text>
 							</View>
 						</View>

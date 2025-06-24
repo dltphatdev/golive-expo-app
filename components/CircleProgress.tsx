@@ -20,8 +20,8 @@ export const CircleProgress = ({ steps, goal }: Props) => {
 				<View style={styles.container}>
 					<AnimatedCircularProgress
 						size={300}
-						width={10}
-						fill={fill}
+						width={8}
+						fill={fill || 0}
 						tintColor="#FF7143"
 						backgroundColor="white"
 						rotation={180}

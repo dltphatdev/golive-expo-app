@@ -1,3 +1,5 @@
+import stepApi from "@/app/+apis/step.api";
+import { ChartStep, GetStepRes } from "@/app/+types/step";
 import { CircleProgress } from "@/components/CircleProgress";
 import Header from "@/components/Header";
 import MetricCard from "@/components/MetricCard";
@@ -5,15 +7,24 @@ import WeeklyChart from "@/components/WeeklyChart";
 import useMockStepWhenAppOpen from "@/hooks/useMockStepWhenAppOpen";
 import useStepSyncOnFocus from "@/hooks/useStepSyncOnFocus";
 import { LinearGradient } from "expo-linear-gradient";
+import { useEffect, useState } from "react";
 
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function HomeScreen() {
+	const [dataStep, setDataStep] = useState<GetStepRes>();
 	const goal = 5000;
-	const step = 3800;
-
 	useMockStepWhenAppOpen(); // Khi mở app
 	useStepSyncOnFocus(); // Khi app quay lại
+
+	useEffect(() => {
+		async function getStep() {
+			const res = await stepApi.getStep();
+			setDataStep(res.data.data);
+		}
+		getStep();
+	}, []);
+
 	return (
 		<SafeAreaView style={styles.container}>
 			<LinearGradient
@@ -27,15 +38,21 @@ export default function HomeScreen() {
 					contentContainerStyle={{ paddingBottom: 55 }}
 				>
 					{/* Header */}
-					<Header />
+					<Header
+						lastStreakCount={dataStep?.lastStreakCount}
+						spoint_earned={dataStep?.stepLogToday.spoint_earned}
+					/>
 
 					{/* CircleProgress */}
-					<View style={styles.crcleProgressWp}>
-						<CircleProgress steps={step} goal={goal} />
+					<View style={styles.circleProgressWp}>
+						<CircleProgress
+							steps={dataStep?.stepLogToday.steps as number}
+							goal={goal}
+						/>
 					</View>
 
 					{/* WeeklyChart */}
-					<WeeklyChart />
+					<WeeklyChart data={dataStep?.chartData as ChartStep[]} />
 
 					{/* Metric Card */}
 					<View style={styles.metricBox}>
@@ -61,7 +78,7 @@ const styles = StyleSheet.create({
 		fontWeight: 600,
 		marginBottom: 10,
 	},
-	crcleProgressWp: {
+	circleProgressWp: {
 		marginTop: 20,
 	},
 });

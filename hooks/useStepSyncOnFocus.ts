@@ -16,6 +16,7 @@ export default function useStepSyncOnFocus() {
 							steps: number;
 						} = JSON.parse(saved);
 						await stepApi.updateStep(parsed);
+						// console.log("upload step ok");
 						await AsyncStorage.removeItem("step_data");
 					} catch (err) {
 						console.error("❌ update step thất bại:", err);

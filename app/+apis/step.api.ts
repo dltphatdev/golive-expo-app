@@ -1,5 +1,5 @@
 import { SuccessResponseApi } from "@/app/+types/common";
-import { UpdateStepReqBody } from "@/app/+types/step";
+import { GetStepRes, UpdateStepReqBody } from "@/app/+types/step";
 import http from "@/app/+utils/http";
 
 const stepApi = {
@@ -8,6 +8,9 @@ const stepApi = {
 			"/step/update",
 			body
 		);
+	},
+	getStep() {
+		return http.instance.get<SuccessResponseApi<GetStepRes>>("/step");
 	},
 };
 

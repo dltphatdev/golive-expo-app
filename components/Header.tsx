@@ -1,9 +1,18 @@
+import { formatNumberCurrency } from "@/app/+utils/common";
 import HeaderSpoint from "@/assets/images/header-spoint.svg";
 import StrakeIcon from "@/assets/images/strake.svg";
 import { useRouter } from "expo-router";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export default function Header() {
+interface Props {
+	lastStreakCount?: number;
+	spoint_earned?: number;
+}
+
+export default function Header({
+	lastStreakCount = 0,
+	spoint_earned = 0,
+}: Props) {
 	const router = useRouter();
 	const handlePressNavigateSetting = () => router.push("/(protected)/setting");
 	return (
@@ -19,7 +28,9 @@ export default function Header() {
 				</TouchableOpacity>
 				<View style={styles.headerStrake}>
 					<StrakeIcon width={14} height={18} />
-					<Text style={styles.headerStrakeText}>Chuỗi 2 ngày liên tục</Text>
+					<Text style={styles.headerStrakeText}>
+						Chuỗi {lastStreakCount} ngày liên tục
+					</Text>
 				</View>
 			</View>
 			<TouchableOpacity
@@ -27,7 +38,9 @@ export default function Header() {
 				onPress={() => router.push("/(protected)/history")}
 			>
 				<HeaderSpoint width={21} />
-				<Text style={styles.headerSpointNumber}>3.034</Text>
+				<Text style={styles.headerSpointNumber}>
+					{formatNumberCurrency(spoint_earned)}
+				</Text>
 			</TouchableOpacity>
 		</View>
 	);
