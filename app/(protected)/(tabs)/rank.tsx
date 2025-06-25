@@ -1,10 +1,21 @@
+import userApi from "@/app/+apis/user.api";
+import { User } from "@/app/+types/user";
 import Header from "@/components/Header";
 import LeaderBoard from "@/components/Leaderboard";
 import RankItem from "@/components/RankItem";
 import { LinearGradient } from "expo-linear-gradient";
+import { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
 
 export default function RankScreen() {
+	const [rankSpointUser, setRankSpointUser] = useState<User[]>([]);
+
+	useEffect(() => {
+		(async function () {
+			const res = await userApi.getListRankSpointUser();
+			setRankSpointUser(res.data.data.users);
+		})();
+	}, [setRankSpointUser]);
 	return (
 		<SafeAreaView style={styles.container}>
 			<LinearGradient
@@ -22,11 +33,15 @@ export default function RankScreen() {
 
 					{/* LeaderBoard */}
 					<View style={styles.leaderBoardWp}>
-						<LeaderBoard />
+						<LeaderBoard data={rankSpointUser} />
 					</View>
 
 					<View style={styles.rankContainer}>
-						<RankItem />
+						{rankSpointUser &&
+							rankSpointUser.length > 0 &&
+							rankSpointUser.map((item, index) => {
+								return <RankItem key={item.id} index={index} data={item} />;
+							})}
 					</View>
 				</ScrollView>
 			</LinearGradient>

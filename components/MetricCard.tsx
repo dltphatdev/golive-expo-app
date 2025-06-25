@@ -1,22 +1,38 @@
+import { Log } from "@/app/+types/step";
+import {
+	formatedDate,
+	formatNumberCurrency,
+	getActiveDuration,
+} from "@/app/+utils/common";
 import Spoint from "@/assets/images/header-spoint.svg";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { Image, StyleSheet, Text, View } from "react-native";
 
-export default function MetricCard() {
+interface Props {
+	log?: Log;
+}
+
+export default function MetricCard({ log }: Props) {
 	return (
 		<LinearGradient
 			colors={["#4A499A", "#717099"]}
 			start={{ x: 0, y: 0 }}
 			end={{ x: 1, y: 0 }}
-			style={styles.metricCardContainer}
+			style={[styles.metricCardContainer]}
 		>
 			<View style={styles.metricCardTop}>
-				<Text style={styles.metricCardDay}>12/04/2025</Text>
+				<Text style={styles.metricCardDay}>
+					{formatedDate(log?.date).toString() || "dd/mm/YYYY"}
+				</Text>
 				<View style={styles.metricCardSpoint}>
 					<Text style={styles.metricCardLabel}>Số dư</Text>
 					<View style={styles.metricCardLine}></View>
-					<Text style={styles.metricCardTopNumber}>199.123</Text>
+					<Text style={styles.metricCardTopNumber}>
+						{log?.user.spoint
+							? formatNumberCurrency(log.user.spoint).toString()
+							: "00.00"}
+					</Text>
 					<Image
 						style={{ width: 14, height: 14 }}
 						width={14}
@@ -36,7 +52,9 @@ export default function MetricCard() {
 						<Text style={styles.metricCardBottomSpointTag}>+</Text>
 						<Spoint width={21} />
 						<Text style={styles.metricCardBottomSpointNumber} numberOfLines={1}>
-							3.034
+							{log?.spoint_earned
+								? formatNumberCurrency(log.spoint_earned).toString()
+								: "00.00"}
 						</Text>
 					</LinearGradient>
 					<LinearGradient
@@ -59,7 +77,9 @@ export default function MetricCard() {
 							size={14}
 							color="rgba(251, 118, 80, 1)"
 						/>
-						<Text style={styles.metricCardBottomStepNumber}>1.120</Text>
+						<Text style={styles.metricCardBottomStepNumber}>
+							{log?.steps ? formatNumberCurrency(log.steps).toString() : "0000"}
+						</Text>
 					</View>
 					<View style={styles.metricCardBottomTimeInfo}>
 						<FontAwesome5
@@ -67,7 +87,11 @@ export default function MetricCard() {
 							size={14}
 							color="rgba(255, 255, 255, 1)"
 						/>
-						<Text style={styles.metricCardBottomStepNumber}>45p</Text>
+						<Text style={styles.metricCardBottomStepNumber}>
+							{log?.start_time && log.last_time
+								? getActiveDuration(log.start_time, log.last_time)
+								: "00p"}
+						</Text>
 					</View>
 				</View>
 			</View>

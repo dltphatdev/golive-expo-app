@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { Pressable, Text } from "react-native";
 import Animated, {
 	useAnimatedStyle,
@@ -78,6 +78,7 @@ export default function TabBarButton({
 				]}
 			>
 				<Icon size={28} color="rgba(34, 34, 96, 1)" strokeWidth={2} />
+
 				<Text
 					style={{
 						fontSize: 14,

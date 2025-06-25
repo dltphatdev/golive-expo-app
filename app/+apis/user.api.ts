@@ -2,6 +2,7 @@ import { SuccessResponseApi } from "@/app/+types/common";
 import {
 	BodyUserProfile,
 	ChangePasswordUserReqBody,
+	GetListRankSpointUser,
 	LoginReqBody,
 	RegisterReqBody,
 	User,
@@ -38,6 +39,11 @@ const userApi = {
 	},
 	resetPassword(body: { forgot_password_code: string; password: string }) {
 		return http.instance.post<{ message: string }>("user/reset-password", body);
+	},
+	getListRankSpointUser() {
+		return http.instance.get<SuccessResponseApi<GetListRankSpointUser>>(
+			"user/list-rank"
+		);
 	},
 	uploadAvatar(body: FormData) {
 		return http.instance.post<

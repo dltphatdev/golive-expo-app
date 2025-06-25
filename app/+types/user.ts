@@ -10,9 +10,14 @@ export interface User {
 	avatar?: string;
 	address?: string;
 	phone?: string;
+	spoint?: number;
 	date_of_birth?: string;
 	created_at?: string;
 	updated_at?: string;
+}
+
+export interface GetListRankSpointUser {
+	users: User[];
 }
 
 export type UserSuccessResponeApi = SuccessResponseApi<{

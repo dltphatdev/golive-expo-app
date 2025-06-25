@@ -1,7 +1,15 @@
+import { User } from "@/app/+types/user";
+import { formatNumberCurrency } from "@/app/+utils/common";
 import Spoint from "@/assets/images/header-spoint.svg";
 import { LinearGradient } from "expo-linear-gradient";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-export default function RankItem() {
+
+interface Props {
+	data?: User;
+	index?: number;
+}
+
+export default function RankItem({ data, index }: Props) {
 	return (
 		<LinearGradient
 			colors={["#4A499A", "#717099"]}
@@ -10,21 +18,25 @@ export default function RankItem() {
 			style={styles.streakContainer}
 		>
 			<View style={styles.streakLeft}>
-				<Text style={styles.streakNumber}>1</Text>
+				<Text style={styles.streakNumber}>
+					{index || index === 0 ? (index + 1).toString() : "0"}
+				</Text>
 				<TouchableOpacity style={styles.streakAvatar}>
 					<Image
 						style={styles.streakImg}
-						source={require("@/assets/images/avatar.png")}
+						source={data?.avatar || require("@/assets/images/avatar.png")}
 						width={30}
 						height={30}
 						resizeMode="contain"
 					/>
 				</TouchableOpacity>
-				<Text style={styles.streakName}>Nguyen Van A</Text>
+				<Text style={styles.streakName}>{data?.fullname || ""}</Text>
 			</View>
 			<View style={styles.streakRight}>
 				<Spoint width={21} />
-				<Text style={styles.streakRightNumber}>3.034</Text>
+				<Text style={styles.streakRightNumber}>
+					{data?.spoint ? formatNumberCurrency(data.spoint).toString() : "0000"}
+				</Text>
 			</View>
 		</LinearGradient>
 	);

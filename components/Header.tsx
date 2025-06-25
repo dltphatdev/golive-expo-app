@@ -1,19 +1,34 @@
+import stepApi from "@/app/+apis/step.api";
+import { GetStepRes } from "@/app/+types/step";
 import { formatNumberCurrency } from "@/app/+utils/common";
 import HeaderSpoint from "@/assets/images/header-spoint.svg";
 import StrakeIcon from "@/assets/images/strake.svg";
 import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface Props {
-	lastStreakCount?: number;
-	spoint_earned?: number;
+	onSendData?: (data: GetStepRes) => void;
 }
 
-export default function Header({
-	lastStreakCount = 0,
-	spoint_earned = 0,
-}: Props) {
+export default function Header({ onSendData }: Props) {
 	const router = useRouter();
+	const [dataStep, setDataStep] = useState<GetStepRes>();
+
+	useEffect(() => {
+		async function getStep() {
+			const res = await stepApi.getStep();
+			setDataStep(res.data.data);
+		}
+		getStep();
+	}, []);
+
+	useEffect(() => {
+		if (dataStep) {
+			onSendData?.(dataStep);
+		}
+	}, [dataStep, onSendData]);
+
 	const handlePressNavigateSetting = () => router.push("/(protected)/setting");
 	return (
 		<View style={styles.header}>
@@ -29,7 +44,7 @@ export default function Header({
 				<View style={styles.headerStrake}>
 					<StrakeIcon width={14} height={18} />
 					<Text style={styles.headerStrakeText}>
-						Chuỗi {lastStreakCount} ngày liên tục
+						Chuỗi {dataStep?.lastStreakCount || 0} ngày liên tục
 					</Text>
 				</View>
 			</View>
@@ -39,7 +54,7 @@ export default function Header({
 			>
 				<HeaderSpoint width={21} />
 				<Text style={styles.headerSpointNumber}>
-					{formatNumberCurrency(spoint_earned)}
+					{formatNumberCurrency(dataStep?.stepLogToday.spoint_earned || 0)}
 				</Text>
 			</TouchableOpacity>
 		</View>

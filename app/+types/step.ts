@@ -19,3 +19,20 @@ export interface GetStepRes {
 	chartData: ChartStep[];
 	lastStreakCount: number;
 }
+
+export interface Log {
+	id: number;
+	user_id: number;
+	date: string;
+	steps: number;
+	spoint_earned: number;
+	start_time: string;
+	last_time: string;
+	created_at: string;
+	updated_at: string;
+	user: { spoint: number };
+}
+
+export interface GetStepLog {
+	logs: Log[];
+}

@@ -1,5 +1,5 @@
 import stepApi from "@/app/+apis/step.api";
-import { ChartStep, GetStepRes } from "@/app/+types/step";
+import { ChartStep, GetStepRes, Log } from "@/app/+types/step";
 import { CircleProgress } from "@/components/CircleProgress";
 import Header from "@/components/Header";
 import MetricCard from "@/components/MetricCard";
@@ -9,21 +9,36 @@ import useStepSyncOnFocus from "@/hooks/useStepSyncOnFocus";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useState } from "react";
 
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+	LogBox,
+	SafeAreaView,
+	ScrollView,
+	StyleSheet,
+	Text,
+	View,
+} from "react-native";
 
+LogBox.ignoreLogs(["Text strings must be rendered within a <Text> component"]);
 export default function HomeScreen() {
+	const [dataStepLogActivity, setStepLogActivity] = useState<Log[]>();
 	const [dataStep, setDataStep] = useState<GetStepRes>();
 	const goal = 5000;
 	useMockStepWhenAppOpen(); // Khi mở app
 	useStepSyncOnFocus(); // Khi app quay lại
 
 	useEffect(() => {
-		async function getStep() {
-			const res = await stepApi.getStep();
-			setDataStep(res.data.data);
-		}
-		getStep();
+		(async function () {
+			const res = await stepApi.getStepLog();
+			setStepLogActivity(res.data.data.logs);
+		})();
 	}, []);
+
+	const handleReceiveStepsFromHeaderComponent = (data: GetStepRes) => {
+		if (data) {
+			setDataStep(data);
+		}
+		return;
+	};
 
 	return (
 		<SafeAreaView style={styles.container}>
@@ -38,10 +53,7 @@ export default function HomeScreen() {
 					contentContainerStyle={{ paddingBottom: 55 }}
 				>
 					{/* Header */}
-					<Header
-						lastStreakCount={dataStep?.lastStreakCount}
-						spoint_earned={dataStep?.stepLogToday.spoint_earned}
-					/>
+					<Header onSendData={handleReceiveStepsFromHeaderComponent} />
 
 					{/* CircleProgress */}
 					<View style={styles.circleProgressWp}>
@@ -57,7 +69,20 @@ export default function HomeScreen() {
 					{/* Metric Card */}
 					<View style={styles.metricBox}>
 						<Text style={styles.metricLabel}>Hoạt động</Text>
-						<MetricCard />
+						{dataStepLogActivity &&
+							dataStepLogActivity?.length > 0 &&
+							dataStepLogActivity?.map((item, index) => {
+								const marginBottomNumber =
+									index === dataStepLogActivity.length - 1 ? 0 : 16;
+								return (
+									<View
+										key={item.id}
+										style={[{ marginBottom: marginBottomNumber }]}
+									>
+										<MetricCard log={item} />
+									</View>
+								);
+							})}
 					</View>
 				</ScrollView>
 			</LinearGradient>

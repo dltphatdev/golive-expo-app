@@ -31,7 +31,7 @@ export default function WeeklyChart({ data }: Props) {
 		const x = index * labelWidth + labelWidth / 2;
 		let y = chartHeight - (item.chartValue / 100) * chartHeight;
 		// Tránh cắt vòng tròn đáy
-		if (y > chartHeight - 6) y = chartHeight - 6;
+		// if (y > chartHeight - 6) y = chartHeight - 6;
 		return { x, y };
 	});
 
@@ -71,7 +71,7 @@ export default function WeeklyChart({ data }: Props) {
 							<Polyline
 								points={points}
 								fill="none"
-								stroke="rgba(255, 255, 255, 0.5)"
+								stroke="rgba(255, 255, 255, 0.8)"
 								strokeWidth="4"
 								strokeLinecap="round"
 								strokeLinejoin="round"

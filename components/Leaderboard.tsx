@@ -1,85 +1,62 @@
+import { User } from "@/app/+types/user";
+import { formatNumberCurrency, getCenteredList } from "@/app/+utils/common";
 import Spoint from "@/assets/images/header-spoint.svg";
 
 import { Image } from "expo-image";
 import { Platform, StyleSheet, Text, View } from "react-native";
-const users = [
-	{
-		name: "Brooklyn Sim...",
-		score: 1200,
-		image: require("@/assets/images/avatar-rank-demo.png"),
-		rank: 1,
-	},
-	{
-		name: "Bradley Henry",
-		score: 987,
-		image: require("@/assets/images/avatar-rank-demo.png"),
-		rank: 2,
-	},
-	{
-		name: "Guy Hawkins",
-		score: 900,
-		image: require("@/assets/images/avatar-rank-demo.png"),
-		rank: 3,
-	},
-];
 
-const getSizeByRankStyle = (rank: number) => {
-	switch (rank) {
-		case 1:
-			return { width: 112, height: 112, marginTop: -12 }; // large + lifted
-		case 2:
-		case 3:
-			return { width: 75, height: 75, marginTop: 0 };
-		default:
-			return { width: 75, height: 75 };
-	}
-};
-const sorted = [
-	users.find((u) => u.rank === 2)!,
-	users.find((u) => u.rank === 1)!,
-	users.find((u) => u.rank === 3)!,
-];
-export default function LeaderBoard() {
+interface Props {
+	data?: User[];
+}
+
+export default function LeaderBoard({ data }: Props) {
+	const sortTop3UserRankingSpoint = getCenteredList(data?.slice(0, 3) || []);
+
 	return (
 		<View style={styles.container}>
-			{sorted.map((user) => (
-				<View key={user.rank} style={styles.userItem}>
+			{sortTop3UserRankingSpoint.map((user, index) => (
+				<View key={user.id} style={styles.userItem}>
 					{/* Rank badge */}
 					<View
-						style={[
-							styles.rankBadge,
-							user.rank === 1 && styles.rankBadgeActive,
-						]}
+						style={[styles.rankBadge, index === 1 && styles.rankBadgeActive]}
 					>
-						<Text style={styles.rankText}>{user.rank}</Text>
+						<Text style={styles.rankText}>{index + 1}</Text>
 					</View>
 
 					{/* Avatar with glow */}
 					<View
 						style={[
-							getSizeByRankStyle(user.rank),
-							user.rank === 1 && styles.glowWrapper,
+							{ width: 80, height: 80, marginTop: 0 },
+							index === 1 && styles.glowWrapper,
 							{
 								borderRadius: 999,
 								alignItems: "center",
 								justifyContent: "center",
 							},
+							index === 1 && { width: 112, height: 112, marginTop: -12 },
 						]}
 					>
 						<View style={styles.avatar}>
-							<Image source={user.image} style={styles.avatarImage} />
+							<Image
+								source={
+									user.avatar || require("@/assets/images/avatar-rank-demo.png")
+								}
+								style={styles.avatarImage}
+							/>
 						</View>
 					</View>
 
 					{/* Name */}
-					<Text numberOfLines={1} ellipsizeMode="tail" style={styles.userName}>
-						{user.name}
+					<Text numberOfLines={2} ellipsizeMode="tail" style={styles.userName}>
+						{user.fullname || ""}
 					</Text>
 
 					{/* Score + icon */}
 					<View style={styles.scoreRow}>
 						<Text style={styles.scoreText} numberOfLines={1}>
-							{user.score}
+							{user.spoint
+								? formatNumberCurrency(user.spoint).toString()
+								: "0000"}
 						</Text>
 						<Spoint width={21} />
 					</View>
@@ -116,7 +93,7 @@ const styles = StyleSheet.create({
 	},
 	rankText: {
 		color: "#fff",
-		fontSize: 12,
+		fontSize: 13,
 		fontWeight: 400,
 	},
 	glowWrapper: {
@@ -147,16 +124,18 @@ const styles = StyleSheet.create({
 		marginTop: 8,
 		maxWidth: 100,
 		fontSize: 16,
+		textAlign: "center",
 	},
 	scoreRow: {
 		flexDirection: "row",
 		alignItems: "center",
+		justifyContent: "center",
 		gap: 5,
 		marginTop: 4,
 	},
 	scoreText: {
 		color: "white", // yellow-400
-		fontSize: 18,
+		fontSize: 14,
 		fontWeight: 600,
 	},
 });
