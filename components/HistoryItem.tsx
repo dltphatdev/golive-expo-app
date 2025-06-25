@@ -1,8 +1,14 @@
+import { Log } from "@/app/+types/step";
+import { formatedDate, formatNumberCurrency } from "@/app/+utils/common";
 import Spoint from "@/assets/images/header-spoint.svg";
 import { LinearGradient } from "expo-linear-gradient";
 import { Image, StyleSheet, Text, View } from "react-native";
 
-export default function HistoryItem() {
+interface Props {
+	log?: Log;
+}
+
+export default function HistoryItem({ log }: Props) {
 	return (
 		<LinearGradient
 			colors={["#4A499A", "#717099"]}
@@ -11,11 +17,16 @@ export default function HistoryItem() {
 			style={styles.historyContainer}
 		>
 			<View style={styles.historyTop}>
-				<Text style={styles.historyDay}>12/04/2025</Text>
+				<Text style={styles.historyDay}>
+					{formatedDate(log?.date) || "00/00/0000"}
+				</Text>
 				<View style={styles.historyCardSpoint}>
 					<Text style={styles.historyCardLabel}>Số dư</Text>
 					<View style={styles.historyCardLine}></View>
-					<Text style={styles.historyCardTopNumber}>199.123</Text>
+					<Text style={styles.historyCardTopNumber}>
+						{formatNumberCurrency(log?.user?.spoint as number).toString() ||
+							"00.00"}
+					</Text>
 					<Image
 						style={styles.historySpointImg}
 						width={14}
@@ -25,7 +36,9 @@ export default function HistoryItem() {
 				</View>
 			</View>
 			<View style={styles.historyCardBottom}>
-				<Text style={styles.historyCardBottomText}>Cộng điểm 12/04/2025</Text>
+				<Text style={styles.historyCardBottomText}>
+					Cộng điểm {formatedDate(log?.date) || "00/00/0000"}
+				</Text>
 
 				<View style={styles.historyCardBottomInfo}>
 					<LinearGradient
@@ -40,7 +53,8 @@ export default function HistoryItem() {
 							style={styles.historyCardBottomSpointNumber}
 							numberOfLines={1}
 						>
-							3.034
+							{formatNumberCurrency(log?.spoint_earned as number).toString() ||
+								"00.00"}
 						</Text>
 					</LinearGradient>
 				</View>

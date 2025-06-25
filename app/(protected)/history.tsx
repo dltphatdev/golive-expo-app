@@ -1,11 +1,27 @@
+import stepApi from "@/app/+apis/step.api";
+import { AppContext } from "@/app/+context/app.context";
+import {
+	formatedDate,
+	formatedTime,
+	formatNumberCurrency,
+} from "@/app/+utils/common";
 import Spoint from "@/assets/images/header-spoint.svg";
 import CardSpoint from "@/components/CardSpoint";
 import HeaderOther from "@/components/HeaderOther";
 import HistoryItem from "@/components/HistoryItem";
+import { useQuery } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
+import { useContext } from "react";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function HistoryScreen() {
+	const { profile } = useContext(AppContext);
+	const getStepLogMutation = useQuery({
+		queryKey: ["get_step_history_logs"],
+		queryFn: stepApi.getStepLog,
+	});
+
+	const getStepHistoryLogs = getStepLogMutation.data?.data.data.logs;
 	return (
 		<SafeAreaView style={styles.container}>
 			<LinearGradient
@@ -30,13 +46,18 @@ export default function HistoryScreen() {
 					>
 						<View style={styles.historyMainTop}>
 							<View style={styles.historySpointTop}>
-								<Text style={styles.historySpointTopText}>00.00</Text>
+								<Text style={styles.historySpointTopText}>
+									{profile?.spoint
+										? formatNumberCurrency(profile.spoint).toString()
+										: "0000"}
+								</Text>
 								<Spoint width={21} />
 							</View>
 							<View style={styles.historyTimeInfo}>
 								<Text style={styles.historyTimeInfoLabel}>Cập nhật lúc</Text>
 								<Text style={styles.historyTimeInfoLabelNumber}>
-									00:00:00 04/04/2025
+									{formatedTime(profile?.updated_at) || "00:00:00"}
+									{formatedDate(profile?.updated_at) || "00/00/0000"}
 								</Text>
 							</View>
 						</View>
@@ -51,7 +72,20 @@ export default function HistoryScreen() {
 					{/* History Item */}
 					<View style={styles.historyBox}>
 						<Text style={styles.historyLabel}>Lịch sử thay đổi</Text>
-						<HistoryItem />
+						{getStepHistoryLogs &&
+							getStepHistoryLogs.length > 0 &&
+							getStepHistoryLogs.map((item, index) => {
+								const marginBottomNumber =
+									index === getStepHistoryLogs.length - 1 ? 0 : 10;
+								return (
+									<View
+										key={item.id}
+										style={[{ marginBottom: marginBottomNumber }]}
+									>
+										<HistoryItem log={item} />
+									</View>
+								);
+							})}
 					</View>
 				</ScrollView>
 			</LinearGradient>

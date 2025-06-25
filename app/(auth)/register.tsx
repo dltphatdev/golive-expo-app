@@ -6,6 +6,7 @@ import httpStatusCode from "@/constants/httpStatusCode";
 import { Ionicons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useMutation } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import moment from "moment";
@@ -56,6 +57,10 @@ export default function RegisterSreen() {
 		resolver: yupResolver(formData) as Resolver<FormData>,
 	});
 
+	const registerMutation = useMutation({
+		mutationFn: userApi.register,
+	});
+
 	const onSubmit = async (
 		data: Pick<
 			FormData,
@@ -66,9 +71,9 @@ export default function RegisterSreen() {
 		try {
 			const payload = {
 				...data,
-				date_of_birth: new Date(data.date_of_birth as Date),
+				date_of_birth: new Date(data.date_of_birth as Date).toISOString(),
 			};
-			const res = await userApi.register(payload);
+			const res = await registerMutation.mutateAsync(payload);
 			setIsAuthenticated(true);
 			setProfile(res.data.data.user);
 			Alert.alert(
@@ -125,7 +130,7 @@ export default function RegisterSreen() {
 								<Ionicons name="arrow-back" size={24} color="white" />
 							</TouchableOpacity>
 							<Image
-								source={require("../../assets/images/bg-auth.png")}
+								source={require("@/assets/images/bg-auth.png")}
 								style={{ height: 240, objectFit: "contain" }}
 							/>
 						</View>

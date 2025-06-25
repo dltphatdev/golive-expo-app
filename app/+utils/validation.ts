@@ -90,8 +90,4 @@ export const updateProfileSchema = yup.object({
 		.max(new Date(), "Ngày tháng năm sinh chưa hợp lệ")
 		.optional(),
 	phone: yup.string().max(10, "Số điện thoại chỉ có thể 10 số").optional(),
-	gender: yup
-		.string()
-		.oneOf(["Male", "Female"], "Giới tính không hợp lệ")
-		.optional(),
 });

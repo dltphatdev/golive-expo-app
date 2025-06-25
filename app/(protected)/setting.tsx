@@ -6,6 +6,7 @@ import HeaderOther from "@/components/HeaderOther";
 import MenuOption from "@/components/MenuOption";
 import httpStatusCode from "@/constants/httpStatusCode";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { useMutation } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useContext } from "react";
@@ -105,11 +106,15 @@ const menus = [
 
 export default function SettingScreen() {
 	const router = useRouter();
-	const { reset } = useContext(AppContext);
+	const { reset, profile } = useContext(AppContext);
+
+	const logoutMutation = useMutation({
+		mutationFn: userApi.logout,
+	});
 	const handleLogout = async () => {
 		try {
 			const refresh_token = await getRefreshTokenFromLS();
-			const res = await userApi.logout({
+			const res = await logoutMutation.mutateAsync({
 				refresh_token: refresh_token as string,
 			});
 			Alert.alert(
@@ -171,12 +176,24 @@ export default function SettingScreen() {
 						/>
 						<View style={styles.profileInfo}>
 							<Text style={styles.profileFullName} numberOfLines={1}>
-								Nguyễn Văn A
+								{profile?.fullname || ""}
 							</Text>
 							<View style={styles.boxProfileBottom}>
-								<Text style={styles.profilePhone}>0987165432</Text>
+								<Text style={styles.profilePhone}>{profile?.phone || ""}</Text>
 								<View style={styles.profileVerify}>
-									<Text style={styles.profileVerifyText}>Đã xác thực</Text>
+									{profile?.verify === "Verified" ? (
+										<Text style={styles.profileVerifyText}>Đã xác thực</Text>
+									) : (
+										<Text
+											style={{
+												fontSize: 14,
+												color: "rgb(212, 37, 37)",
+												fontWeight: 700,
+											}}
+										>
+											Chưa xác thực
+										</Text>
+									)}
 								</View>
 							</View>
 							<TouchableOpacity

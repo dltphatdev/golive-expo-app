@@ -3,8 +3,9 @@ import { GetStepRes } from "@/app/+types/step";
 import { formatNumberCurrency } from "@/app/+utils/common";
 import HeaderSpoint from "@/assets/images/header-spoint.svg";
 import StrakeIcon from "@/assets/images/strake.svg";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface Props {
@@ -13,15 +14,13 @@ interface Props {
 
 export default function Header({ onSendData }: Props) {
 	const router = useRouter();
-	const [dataStep, setDataStep] = useState<GetStepRes>();
 
-	useEffect(() => {
-		async function getStep() {
-			const res = await stepApi.getStep();
-			setDataStep(res.data.data);
-		}
-		getStep();
-	}, []);
+	const getStepMutation = useQuery({
+		queryKey: ["get_step"],
+		queryFn: stepApi.getStep,
+	});
+
+	const dataStep = getStepMutation.data?.data.data;
 
 	useEffect(() => {
 		if (dataStep) {

@@ -27,6 +27,19 @@ export default function LeaderBoard({ data }: Props) {
 					<View
 						style={[
 							{ width: 80, height: 80, marginTop: 0 },
+							index !== 1 && {
+								...Platform.select({
+									ios: {
+										shadowColor: "rgba(110, 86, 33, 0.98)", // gold
+										shadowOffset: { width: 0, height: 0 },
+										shadowOpacity: 0.9,
+										shadowRadius: 16,
+									},
+									android: {
+										elevation: 15,
+									},
+								}),
+							},
 							index === 1 && styles.glowWrapper,
 							{
 								borderRadius: 999,

@@ -1,17 +1,23 @@
+import userApi from "@/app/+apis/user.api";
 import { AppContext } from "@/app/+context/app.context";
 import { BodyUserProfile } from "@/app/+types/user";
 import { updateProfileSchema } from "@/app/+utils/validation";
 import Input from "@/components/Input";
+import CONFIG from "@/constants/config";
 import httpStatusCode from "@/constants/httpStatusCode";
 import { Ionicons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import * as FileSystem from "expo-file-system";
+import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import moment from "moment";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Controller, Resolver, useForm } from "react-hook-form";
 import {
 	ActivityIndicator,
+	Alert,
 	Image,
 	Keyboard,
 	KeyboardAvoidingView,
@@ -33,15 +39,18 @@ type FormData = yup.InferType<typeof formData>;
 export default function ProfileScreen() {
 	const insets = useSafeAreaInsets();
 	const router = useRouter();
-	const { reset, setProfile } = useContext(AppContext);
+	const { setProfile } = useContext(AppContext);
 	const [isLoading, setIsLoading] = useState(false);
 	const [showDatePicker, setShowDatePicker] = useState(false);
 	const [tempDate, setTempDate] = useState<Date | null>(null);
+	const [avatarUri, setAvatarUri] = useState<string | null>(null);
 
 	const {
 		control,
 		handleSubmit,
 		setError,
+		setValue,
+		watch,
 		formState: { errors },
 	} = useForm<FormData>({
 		defaultValues: {
@@ -50,31 +59,77 @@ export default function ProfileScreen() {
 			date_of_birth: new Date(1990, 0, 1),
 			fullname: "",
 			phone: "",
-			gender: "Male",
 		},
 		resolver: yupResolver(formData) as Resolver<FormData>,
 	});
 
+	const { data: profileData, refetch } = useQuery({
+		queryKey: ["profile"],
+		queryFn: userApi.getProfile,
+	});
+	const updateProfileMutation = useMutation({
+		mutationFn: userApi.updateProfile,
+	});
+	const uploadAvatarMutation = useMutation({
+		mutationFn: userApi.uploadAvatar,
+	});
+
+	const profile = profileData?.data.data;
+
+	useEffect(() => {
+		setValue("fullname", profile?.fullname || "");
+		setValue("address", profile?.address || "");
+		setValue("avatar", profile?.avatar || "");
+		setValue("phone", profile?.phone || "");
+		setValue(
+			"date_of_birth",
+			profile?.date_of_birth
+				? new Date(profile.date_of_birth)
+				: new Date(1990, 0, 1)
+		);
+	}, [profile, setValue]);
+	const avatar = watch("avatar");
 	const onSubmit = async (data: BodyUserProfile) => {
 		setIsLoading(true);
 		try {
+			let avatarName = avatar;
+			if (avatarUri) {
+				const form = new FormData();
+				form.append("image", {
+					uri: avatarUri,
+					name: avatarUri.split("/").pop(),
+				} as any);
+				const uploadRes = await uploadAvatarMutation.mutateAsync(form);
+				avatarName = uploadRes.data.data.filename;
+				setValue("avatar", avatarName);
+			}
 			const payload = {
 				...data,
-				date_of_birth: new Date(data.date_of_birth as Date),
+				date_of_birth: new Date(data.date_of_birth as Date).toISOString(),
+				avatar: avatarName,
 			};
-			// const res = await userApi.register(payload);
-			// setProfile(res.data.data.user);
-			// Alert.alert(
-			// 	res.data.message,
-			// 	"Vui lòng kiểm tra email để xác thực tài khoản.",
-			// 	[
-			// 		{
-			// 			text: "OK",
-			// 			onPress: () => router.push("/(protected)/verify-email"),
-			// 		},
-			// 	],
-			// 	{ cancelable: false }
-			// );
+			for (const key in payload) {
+				if (
+					payload[key as keyof typeof payload] === undefined ||
+					payload[key as keyof typeof payload] === "" ||
+					payload[key as keyof typeof payload] === null
+				) {
+					delete payload[key as keyof typeof payload];
+				}
+			}
+			const res = await updateProfileMutation.mutateAsync(payload);
+			setProfile(res.data.data);
+			Alert.alert(
+				res.data.message,
+				"Thông báo cập nhật tài khoản",
+				[
+					{
+						text: "OK",
+						onPress: () => refetch,
+					},
+				],
+				{ cancelable: false }
+			);
 		} catch (error: any) {
 			if (error.status === httpStatusCode.UnprocessableEntity) {
 				const formError = error.response?.data?.errors;
@@ -91,6 +146,98 @@ export default function ProfileScreen() {
 			setIsLoading(false);
 		}
 	};
+
+	const handlePickImage = async () => {
+		const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+		if (!permission.granted) {
+			Alert.alert(
+				"Permission denied",
+				"You need to allow photo access.",
+				[
+					{
+						text: "OK",
+						onPress: () => setValue("avatar", ""),
+					},
+				],
+				{ cancelable: false }
+			);
+			return;
+		}
+
+		const result = await ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.Images,
+			quality: 1,
+		});
+
+		if (!result.canceled) {
+			const uri = result.assets[0].uri;
+			setAvatarUri(uri);
+			const selected = result.assets[0];
+			const fileUri = selected.uri;
+			const fileInfo = await FileSystem.getInfoAsync(fileUri);
+
+			const fileExt = fileUri.split(".").pop()?.toLowerCase();
+
+			if (!["jpg", "jpeg", "png"].includes(fileExt || "")) {
+				Alert.alert(
+					"Lỗi",
+					"Dung lượng tối đa 1MB. Định dạng: JPG, JPEG, PNG.",
+					[
+						{
+							text: "OK",
+							onPress: () => {
+								setAvatarUri(null);
+							},
+						},
+					],
+					{ cancelable: false }
+				);
+				return;
+			}
+
+			if (!fileInfo.exists) {
+				Alert.alert(
+					"Thông báo",
+					"File không tồn tại",
+					[
+						{
+							text: "OK",
+							onPress: () => {
+								setAvatarUri(null);
+							},
+						},
+					],
+					{ cancelable: false }
+				);
+				return;
+			}
+
+			if (fileInfo.size && fileInfo.size > 1 * 1024 * 1024) {
+				Alert.alert(
+					"File quá lớn",
+					"Dung lượng tối đa là 1MB",
+					[
+						{
+							text: "OK",
+							onPress: () => {
+								setAvatarUri(null);
+							},
+						},
+					],
+					{ cancelable: false }
+				);
+				return;
+			}
+			let file = "";
+			if (fileUri) {
+				file = fileUri.split("/").pop() || "";
+			}
+			setValue("avatar", file);
+			setAvatarUri(fileUri);
+		}
+	};
+
+	console.log(`${CONFIG.SERVER_URL}image/${profile?.avatar}`);
 
 	return (
 		<KeyboardAvoidingView
@@ -126,6 +273,28 @@ export default function ProfileScreen() {
 							<Text style={styles.title}>
 								Trang thông tin cá nhân Golive 👋
 							</Text>
+
+							{/* Avatar */}
+							<View style={{ alignItems: "center" }}>
+								<View style={styles.avatarWrapper}>
+									<Image
+										source={
+											avatarUri
+												? { uri: avatarUri }
+												: profile?.avatar
+												? { uri: `${CONFIG.SERVER_URL}image/${profile.avatar}` }
+												: require("@/assets/images/profile.png")
+										}
+										style={styles.avatar}
+									/>
+									<TouchableOpacity
+										style={styles.choosenFile}
+										onPress={handlePickImage}
+									>
+										<Ionicons name="create-outline" size={20} color="white" />
+									</TouchableOpacity>
+								</View>
+							</View>
 
 							{/* Fullname */}
 							<Controller
@@ -200,7 +369,7 @@ export default function ProfileScreen() {
 									color: "rgba(65, 65, 65, 1)",
 								}}
 							>
-								Ngày tháng năm sinh
+								Ngày sinh
 							</Text>
 							<Controller
 								control={control}
@@ -300,39 +469,6 @@ export default function ProfileScreen() {
 							{errors.date_of_birth && (
 								<Text style={{ color: "red", marginBottom: 12 }}>
 									{errors.date_of_birth.message}
-								</Text>
-							)}
-
-							{/* Gender */}
-							<Text style={styles.genderLabel}>Giới tính</Text>
-							<Controller
-								control={control}
-								name="gender"
-								render={({ field: { onChange, value } }) => (
-									<View style={{ flexDirection: "row", marginBottom: 12 }}>
-										{[
-											{ label: "Nam", value: "Male" },
-											{ label: "Nữ", value: "Female" },
-										].map((item) => (
-											<TouchableOpacity
-												key={item.value}
-												onPress={() => onChange(item.value)}
-												style={styles.genderTouchableOpacity}
-											>
-												<View style={styles.genderRadioOutner}>
-													{value === item.value && (
-														<View style={styles.genderRadioInner} />
-													)}
-												</View>
-												<Text>{item.label}</Text>
-											</TouchableOpacity>
-										))}
-									</View>
-								)}
-							/>
-							{errors.gender && (
-								<Text style={{ color: "red", marginBottom: 12 }}>
-									{errors.gender.message}
 								</Text>
 							)}
 
@@ -461,5 +597,25 @@ const styles = StyleSheet.create({
 		borderRadius: 12,
 		paddingVertical: 20,
 		alignItems: "center",
+		marginTop: 12,
+	},
+	avatarWrapper: {
+		width: 160,
+		height: 160,
+		position: "relative",
+	},
+	avatar: {
+		width: "100%",
+		height: "100%",
+		borderRadius: 160,
+	},
+	choosenFile: {
+		position: "absolute",
+		bottom: 8,
+		right: 8,
+		backgroundColor: "#1976D2",
+		borderRadius: 16,
+		padding: 6,
+		zIndex: 2,
 	},
 });

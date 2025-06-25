@@ -30,8 +30,6 @@ export default function WeeklyChart({ data }: Props) {
 	const chartPoints = sortedData.map((item, index) => {
 		const x = index * labelWidth + labelWidth / 2;
 		let y = chartHeight - (item.chartValue / 100) * chartHeight;
-		// Tránh cắt vòng tròn đáy
-		// if (y > chartHeight - 6) y = chartHeight - 6;
 		return { x, y };
 	});
 

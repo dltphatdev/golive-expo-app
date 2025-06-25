@@ -1,37 +1,30 @@
 import stepApi from "@/app/+apis/step.api";
-import { ChartStep, GetStepRes, Log } from "@/app/+types/step";
+import { ChartStep, GetStepRes } from "@/app/+types/step";
 import { CircleProgress } from "@/components/CircleProgress";
 import Header from "@/components/Header";
 import MetricCard from "@/components/MetricCard";
 import WeeklyChart from "@/components/WeeklyChart";
 import useMockStepWhenAppOpen from "@/hooks/useMockStepWhenAppOpen";
 import useStepSyncOnFocus from "@/hooks/useStepSyncOnFocus";
+import { useQuery } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import {
-	LogBox,
-	SafeAreaView,
-	ScrollView,
-	StyleSheet,
-	Text,
-	View,
-} from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 
-LogBox.ignoreLogs(["Text strings must be rendered within a <Text> component"]);
 export default function HomeScreen() {
-	const [dataStepLogActivity, setStepLogActivity] = useState<Log[]>();
 	const [dataStep, setDataStep] = useState<GetStepRes>();
 	const goal = 5000;
+
 	useMockStepWhenAppOpen(); // Khi mở app
 	useStepSyncOnFocus(); // Khi app quay lại
 
-	useEffect(() => {
-		(async function () {
-			const res = await stepApi.getStepLog();
-			setStepLogActivity(res.data.data.logs);
-		})();
-	}, []);
+	const getStepLogMutation = useQuery({
+		queryKey: ["get_step_logs"],
+		queryFn: stepApi.getStepLog,
+	});
+
+	const getStepLogs = getStepLogMutation.data?.data.data.logs;
 
 	const handleReceiveStepsFromHeaderComponent = (data: GetStepRes) => {
 		if (data) {
@@ -39,7 +32,6 @@ export default function HomeScreen() {
 		}
 		return;
 	};
-
 	return (
 		<SafeAreaView style={styles.container}>
 			<LinearGradient
@@ -54,7 +46,6 @@ export default function HomeScreen() {
 				>
 					{/* Header */}
 					<Header onSendData={handleReceiveStepsFromHeaderComponent} />
-
 					{/* CircleProgress */}
 					<View style={styles.circleProgressWp}>
 						<CircleProgress
@@ -69,11 +60,11 @@ export default function HomeScreen() {
 					{/* Metric Card */}
 					<View style={styles.metricBox}>
 						<Text style={styles.metricLabel}>Hoạt động</Text>
-						{dataStepLogActivity &&
-							dataStepLogActivity?.length > 0 &&
-							dataStepLogActivity?.map((item, index) => {
+						{getStepLogs &&
+							getStepLogs?.length > 0 &&
+							getStepLogs?.map((item, index) => {
 								const marginBottomNumber =
-									index === dataStepLogActivity.length - 1 ? 0 : 16;
+									index === getStepLogs.length - 1 ? 0 : 16;
 								return (
 									<View
 										key={item.id}

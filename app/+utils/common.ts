@@ -67,10 +67,10 @@ export function formatedDate(isoDate?: string) {
 	const date = isoDate ? new Date(isoDate) : null;
 	return date
 		? date.toLocaleString("vi-VN", {
+				timeZone: "UTC",
 				day: "2-digit",
 				month: "2-digit",
 				year: "numeric",
-				timeZone: "Asia/Ho_Chi_Minh",
 		  })
 		: "";
 }
