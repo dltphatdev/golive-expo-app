@@ -1,5 +1,6 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface Props {
@@ -8,11 +9,13 @@ interface Props {
 		items: {
 			icon: React.ReactNode;
 			name: string;
+			path?: string;
 		}[];
 	}[];
 }
 
 export default function MenuOption({ data }: Props) {
+	const router = useRouter();
 	return (
 		<View style={styles.container}>
 			{data.map((item, index) => {
@@ -43,7 +46,9 @@ export default function MenuOption({ data }: Props) {
 											{itm.icon}
 											<Text style={styles.menuOptionText}>{itm.name}</Text>
 										</View>
-										<TouchableOpacity>
+										<TouchableOpacity
+											onPress={() => router.push(itm.path || "/")}
+										>
 											<FontAwesome5
 												name="chevron-right"
 												size={14}

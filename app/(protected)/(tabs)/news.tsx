@@ -15,7 +15,7 @@ export default function NewsScreen() {
 			>
 				<ScrollView
 					style={styles.content}
-					contentContainerStyle={{ paddingBottom: 65 }}
+					contentContainerStyle={{ paddingBottom: 25 }}
 				>
 					{/* Header */}
 					<View style={styles.wrapContent}>
@@ -51,9 +51,10 @@ const styles = StyleSheet.create({
 		marginTop: 16,
 	},
 	news: {
-		gap: 10,
+		gap: 12,
 		flexDirection: "row",
 		flexWrap: "wrap",
+		flex: 1,
 		justifyContent: "space-between",
 	},
 });

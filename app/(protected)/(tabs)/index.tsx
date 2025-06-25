@@ -4,8 +4,8 @@ import { CircleProgress } from "@/components/CircleProgress";
 import Header from "@/components/Header";
 import MetricCard from "@/components/MetricCard";
 import WeeklyChart from "@/components/WeeklyChart";
-import useMockStepWhenAppOpen from "@/hooks/useMockStepWhenAppOpen";
 import useStepSyncOnFocus from "@/hooks/useStepSyncOnFocus";
+import useStepWhenAppOpen from "@/hooks/useStepWhenAppOpen";
 import { useQuery } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
@@ -16,7 +16,7 @@ export default function HomeScreen() {
 	const [dataStep, setDataStep] = useState<GetStepRes>();
 	const goal = 5000;
 
-	useMockStepWhenAppOpen(); // Khi mở app
+	useStepWhenAppOpen(); // Khi mở app
 	useStepSyncOnFocus(); // Khi app quay lại
 
 	const getStepLogMutation = useQuery({

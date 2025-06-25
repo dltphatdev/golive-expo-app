@@ -4,6 +4,7 @@ import { getRefreshTokenFromLS } from "@/app/+utils/auth";
 import ProfileButton from "@/assets/images/profile-btn.svg";
 import HeaderOther from "@/components/HeaderOther";
 import MenuOption from "@/components/MenuOption";
+import CONFIG from "@/constants/config";
 import httpStatusCode from "@/constants/httpStatusCode";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { useMutation } from "@tanstack/react-query";
@@ -100,6 +101,17 @@ const menus = [
 				),
 				name: "Điều khoản sử dụng",
 			},
+			{
+				icon: (
+					<FontAwesome5
+						name="phone"
+						size={16}
+						color="rgba(255, 255, 255, 0.9)"
+					/>
+				),
+				name: "Hỗ trợ khách hàng",
+				path: "/(protected)/support",
+			},
 		],
 	},
 ];
@@ -169,7 +181,11 @@ export default function SettingScreen() {
 							<ProfileButton width={24} height={24} />
 						</TouchableOpacity>
 						<Image
-							source={require("@/assets/images/profile.png")}
+							source={
+								profile?.avatar
+									? { uri: `${CONFIG.SERVER_URL}image/${profile.avatar}` }
+									: require("@/assets/images/noimage.png")
+							}
 							style={styles.profileAvatar}
 							width={64}
 							height={64}

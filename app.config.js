@@ -5,6 +5,7 @@ export default {
 		name: "golive",
 		slug: "golive",
 		version: "1.0.0",
+		icon: "./assets/golive-logo-streaming.png",
 		plugins: [
 			// withGoogleFit,
 			"expo-router",

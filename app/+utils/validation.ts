@@ -91,3 +91,23 @@ export const updateProfileSchema = yup.object({
 		.optional(),
 	phone: yup.string().max(10, "Số điện thoại chỉ có thể 10 số").optional(),
 });
+
+export const supportSchema = yup.object({
+	email: yup
+		.string()
+		.min(5, "Email phải có tối thiểu 5 ký tự")
+		.max(160, "Email không được quá 160 ký tự")
+		.email("Email không hợp lệ")
+		.optional(),
+	address: yup
+		.string()
+		.transform((value) => (value === "" ? undefined : value))
+		.max(160, "Địa không được vượt quá 160 ký tự")
+		.optional(),
+	fullname: yup.string().max(160, "Họ tên tối đa 160 ký tự").optional(),
+	phone: yup.string().max(10, "Số điện thoại chỉ có thể 10 số").optional(),
+	content: yup
+		.string()
+		.max(2000, "Nội dung không được vượt quá 2000 ký tự")
+		.optional(),
+});

@@ -22,7 +22,7 @@ const slides = [
 		description:
 			"Đi bộ mỗi ngày, sức khỏe mỗi phút. Hãy để GoLive app cùng bạn nâng cao sức khoẻ của mình mỗi ngày.",
 		backgroundColor: "#CDE3F3",
-		image: require("../../assets/images/walk.png"),
+		image: require("@/assets/images/walk.png"),
 	},
 	{
 		id: "2",
@@ -30,14 +30,14 @@ const slides = [
 		description:
 			"Vóc dáng thon gọn, tự tin toả sáng. Hãy để GoLive app cùng bạn cải thiện vóc dáng của mình mỗi ngày.",
 		backgroundColor: "#D4ECCD",
-		image: require("../../assets/images/health.png"),
+		image: require("@/assets/images/health.png"),
 	},
 	{
 		id: "3",
 		title: "Tích điểm\nmua sắm cùng GoLive",
 		description: "Tích điểm đổi quà, mua sắm thả ga cùng GoLive app.",
 		backgroundColor: "#F8EED4",
-		image: require("../../assets/images/start.png"),
+		image: require("@/assets/images/start.png"),
 	},
 ];
 

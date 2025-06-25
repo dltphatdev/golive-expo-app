@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
 	},
 	dayText: {
 		color: "rgba(205, 205, 205, 1)",
-		fontSize: 12,
+		fontSize: 11,
 		fontWeight: "500",
 		marginTop: 6,
 		marginBottom: 10,

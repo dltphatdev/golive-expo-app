@@ -1,9 +1,18 @@
 import { Feather } from "@expo/vector-icons";
-import { Image, StyleSheet, Text, View } from "react-native";
+import {
+	Dimensions,
+	Image,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native";
+const { width, height } = Dimensions.get("window");
+const cardWidth = (width - 34) / 2; // 2 columns with padding
 
 export default function NewsItem() {
 	return (
-		<View style={styles.newsItem}>
+		<TouchableOpacity style={styles.newsItem}>
 			<Image
 				source={require("@/assets/images/news.png")}
 				style={styles.newsImg}
@@ -24,7 +33,7 @@ export default function NewsItem() {
 					</View>
 				</View>
 			</View>
-		</View>
+		</TouchableOpacity>
 	);
 }
 const styles = StyleSheet.create({
@@ -32,10 +41,13 @@ const styles = StyleSheet.create({
 		position: "relative",
 		borderRadius: 12,
 		overflow: "hidden",
-		width: "48%",
+		// width: "48%",
+		width: cardWidth,
+		height: cardWidth * 1.4,
 	},
 	newsImg: {
 		width: "100%",
+		height: "100%",
 		resizeMode: "cover",
 	},
 	newsContent: {

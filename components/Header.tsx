@@ -1,11 +1,13 @@
 import stepApi from "@/app/+apis/step.api";
+import { AppContext } from "@/app/+context/app.context";
 import { GetStepRes } from "@/app/+types/step";
 import { formatNumberCurrency } from "@/app/+utils/common";
 import HeaderSpoint from "@/assets/images/header-spoint.svg";
 import StrakeIcon from "@/assets/images/strake.svg";
+import CONFIG from "@/constants/config";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface Props {
@@ -14,7 +16,7 @@ interface Props {
 
 export default function Header({ onSendData }: Props) {
 	const router = useRouter();
-
+	const { profile } = useContext(AppContext);
 	const getStepMutation = useQuery({
 		queryKey: ["get_step"],
 		queryFn: stepApi.getStep,
@@ -34,10 +36,13 @@ export default function Header({ onSendData }: Props) {
 			<View style={styles.headerLeft}>
 				<TouchableOpacity onPress={handlePressNavigateSetting}>
 					<Image
-						style={{ width: 30, height: 30 }}
-						source={require("@/assets/images/avatar.png")}
+						style={{ width: 30, height: 30, borderRadius: 30 }}
+						source={
+							profile?.avatar
+								? { uri: `${CONFIG.SERVER_URL}image/${profile.avatar}` }
+								: require("@/assets/images/noimage.png")
+						}
 						width={30}
-						resizeMode="contain"
 					/>
 				</TouchableOpacity>
 				<View style={styles.headerStrake}>

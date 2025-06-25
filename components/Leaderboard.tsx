@@ -1,6 +1,7 @@
 import { User } from "@/app/+types/user";
 import { formatNumberCurrency, getCenteredList } from "@/app/+utils/common";
 import Spoint from "@/assets/images/header-spoint.svg";
+import CONFIG from "@/constants/config";
 
 import { Image } from "expo-image";
 import { Platform, StyleSheet, Text, View } from "react-native";
@@ -20,7 +21,9 @@ export default function LeaderBoard({ data }: Props) {
 					<View
 						style={[styles.rankBadge, index === 1 && styles.rankBadgeActive]}
 					>
-						<Text style={styles.rankText}>{index + 1}</Text>
+						<Text style={styles.rankText}>
+							{index === 0 ? 2 : index === 1 ? 1 : index === 2 ? 3 : ""}
+						</Text>
 					</View>
 
 					{/* Avatar with glow */}
@@ -52,7 +55,9 @@ export default function LeaderBoard({ data }: Props) {
 						<View style={styles.avatar}>
 							<Image
 								source={
-									user.avatar || require("@/assets/images/avatar-rank-demo.png")
+									user.avatar
+										? { uri: `${CONFIG.SERVER_URL}image/${user.avatar}` }
+										: require("@/assets/images/noimage.png")
 								}
 								style={styles.avatarImage}
 							/>

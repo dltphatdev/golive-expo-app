@@ -1,6 +1,7 @@
 import { User } from "@/app/+types/user";
 import { formatNumberCurrency } from "@/app/+utils/common";
 import Spoint from "@/assets/images/header-spoint.svg";
+import CONFIG from "@/constants/config";
 import { LinearGradient } from "expo-linear-gradient";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -24,10 +25,13 @@ export default function RankItem({ data, index }: Props) {
 				<TouchableOpacity style={styles.streakAvatar}>
 					<Image
 						style={styles.streakImg}
-						source={data?.avatar || require("@/assets/images/avatar.png")}
+						source={
+							data?.avatar
+								? { uri: `${CONFIG.SERVER_URL}image/${data.avatar}` }
+								: require("@/assets/images/noimage.png")
+						}
 						width={30}
 						height={30}
-						resizeMode="contain"
 					/>
 				</TouchableOpacity>
 				<Text style={styles.streakName}>{data?.fullname || ""}</Text>

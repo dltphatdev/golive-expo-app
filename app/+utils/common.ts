@@ -75,12 +75,6 @@ export function formatedDate(isoDate?: string) {
 		: "";
 }
 
-// export const getStepsToday = async (): Promise<number> => {
-// 	return Platform.OS === "ios"
-// 		? await getStepsTodayIOS()
-// 		: await getGoogleFitDataAndroid();
-// };
-
 export function getActiveDuration(
 	start: string | Date,
 	end: string | Date

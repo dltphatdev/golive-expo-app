@@ -237,8 +237,6 @@ export default function ProfileScreen() {
 		}
 	};
 
-	console.log(`${CONFIG.SERVER_URL}image/${profile?.avatar}`);
-
 	return (
 		<KeyboardAvoidingView
 			style={{ flex: 1 }}
@@ -283,7 +281,7 @@ export default function ProfileScreen() {
 												? { uri: avatarUri }
 												: profile?.avatar
 												? { uri: `${CONFIG.SERVER_URL}image/${profile.avatar}` }
-												: require("@/assets/images/profile.png")
+												: require("@/assets/images/noimage.png")
 										}
 										style={styles.avatar}
 									/>
@@ -559,33 +557,6 @@ const styles = StyleSheet.create({
 		color: "#fff",
 		textAlign: "center",
 		fontWeight: "600",
-	},
-	genderLabel: {
-		fontSize: 18,
-		marginBottom: 6,
-		fontWeight: "700",
-		color: "rgba(65, 65, 65, 1)",
-	},
-	genderTouchableOpacity: {
-		flexDirection: "row",
-		alignItems: "center",
-		marginRight: 20,
-	},
-	genderRadioOutner: {
-		height: 20,
-		width: 20,
-		borderRadius: 10,
-		borderWidth: 1,
-		borderColor: "#444",
-		alignItems: "center",
-		justifyContent: "center",
-		marginRight: 6,
-	},
-	genderRadioInner: {
-		height: 12,
-		width: 12,
-		borderRadius: 6,
-		backgroundColor: "#246BFD",
 	},
 	loginButtonText: {
 		color: "#fff",
